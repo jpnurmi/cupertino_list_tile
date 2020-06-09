@@ -100,7 +100,7 @@ class InkResponse extends StatelessWidget {
   ///
   /// Must have an ancestor [Material] widget in which to cause ink reactions.
   ///
-  /// The [mouseCursor], [containedInkWell], [highlightShape], [enableFeedback],
+  /// The [mouseCursor], [containedInkWell], [highlightShape],
   /// and [excludeFromSemantics] arguments must not be null.
   const InkResponse({
     Key key,
@@ -121,7 +121,6 @@ class InkResponse extends StatelessWidget {
     this.focusColor,
     this.hoverColor,
     this.highlightColor,
-    this.enableFeedback = true,
     this.excludeFromSemantics = false,
     this.focusNode,
     this.canRequestFocus = true,
@@ -130,7 +129,6 @@ class InkResponse extends StatelessWidget {
   })  : assert(mouseCursor != null),
         assert(containedInkWell != null),
         assert(highlightShape != null),
-        assert(enableFeedback != null),
         assert(excludeFromSemantics != null),
         assert(autofocus != null),
         assert(canRequestFocus != null),
@@ -284,16 +282,6 @@ class InkResponse extends StatelessWidget {
   ///  * [splashFactory], which defines the appearance of the splash.
   final Color highlightColor;
 
-  /// Whether detected gestures should provide acoustic and/or haptic feedback.
-  ///
-  /// For example, on Android a tap will produce a clicking sound and a
-  /// long-press will produce a short vibration, when feedback is enabled.
-  ///
-  /// See also:
-  ///
-  ///  * [Feedback] for providing platform-specific feedback to certain actions.
-  final bool enableFeedback;
-
   /// Whether to exclude the gestures introduced by this widget from the
   /// semantics tree.
   ///
@@ -351,7 +339,6 @@ class InkResponse extends StatelessWidget {
       focusColor: focusColor,
       hoverColor: hoverColor,
       highlightColor: highlightColor,
-      enableFeedback: enableFeedback,
       excludeFromSemantics: excludeFromSemantics,
       focusNode: focusNode,
       canRequestFocus: canRequestFocus,
@@ -396,7 +383,6 @@ class _InkResponseStateWidget extends StatefulWidget {
     this.focusColor,
     this.hoverColor,
     this.highlightColor,
-    this.enableFeedback = true,
     this.excludeFromSemantics = false,
     this.focusNode,
     this.canRequestFocus = true,
@@ -406,7 +392,6 @@ class _InkResponseStateWidget extends StatefulWidget {
     this.debugCheckContext,
   })  : assert(containedInkWell != null),
         assert(highlightShape != null),
-        assert(enableFeedback != null),
         assert(excludeFromSemantics != null),
         assert(autofocus != null),
         assert(canRequestFocus != null),
@@ -429,7 +414,6 @@ class _InkResponseStateWidget extends StatefulWidget {
   final Color focusColor;
   final Color hoverColor;
   final Color highlightColor;
-  final bool enableFeedback;
   final bool excludeFromSemantics;
   final ValueChanged<bool> onFocusChange;
   final bool autofocus;
@@ -601,7 +585,6 @@ class _InkResponseState extends State<_InkResponseStateWidget> {
   void _handleTap(BuildContext context) {
     updateHighlight(_HighlightType.pressed, value: false);
     if (widget.onTap != null) {
-      if (widget.enableFeedback) Feedback.forTap(context);
       widget.onTap();
     }
   }
@@ -619,7 +602,6 @@ class _InkResponseState extends State<_InkResponseStateWidget> {
 
   void _handleLongPress(BuildContext context) {
     if (widget.onLongPress != null) {
-      if (widget.enableFeedback) Feedback.forLongPress(context);
       widget.onLongPress();
     }
   }
@@ -780,7 +762,7 @@ class InkWell extends InkResponse {
   ///
   /// Must have an ancestor [Material] widget in which to cause ink reactions.
   ///
-  /// The [mouseCursor], [enableFeedback], and [excludeFromSemantics] arguments
+  /// The [mouseCursor], [excludeFromSemantics] arguments
   /// must not be null.
   const InkWell({
     Key key,
@@ -799,7 +781,6 @@ class InkWell extends InkResponse {
     double radius,
     BorderRadius borderRadius,
     ShapeBorder customBorder,
-    bool enableFeedback = true,
     bool excludeFromSemantics = false,
     FocusNode focusNode,
     bool canRequestFocus = true,
@@ -824,7 +805,6 @@ class InkWell extends InkResponse {
           radius: radius,
           borderRadius: borderRadius,
           customBorder: customBorder,
-          enableFeedback: enableFeedback ?? true,
           excludeFromSemantics: excludeFromSemantics ?? false,
           focusNode: focusNode,
           canRequestFocus: canRequestFocus ?? true,
