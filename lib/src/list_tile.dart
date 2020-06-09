@@ -633,7 +633,6 @@ class ListTile extends StatelessWidget {
     this.trailing,
     this.isThreeLine = false,
     this.dense,
-    this.visualDensity,
     this.contentPadding,
     this.enabled = true,
     this.onTap,
@@ -699,16 +698,6 @@ class ListTile extends StatelessWidget {
   ///
   /// Dense list tiles default to a smaller height.
   final bool dense;
-
-  /// Defines how compact the list tile's layout will be.
-  ///
-  /// {@macro flutter.material.themedata.visualDensity}
-  ///
-  /// See also:
-  ///
-  ///  * [ThemeData.visualDensity], which specifies the [density] for all widgets
-  ///    within a [Theme].
-  final VisualDensity visualDensity;
 
   /// The tile's internal padding.
   ///
@@ -955,7 +944,6 @@ class ListTile extends StatelessWidget {
             subtitle: subtitleText,
             trailing: trailingIcon,
             isDense: _isDenseLayout(tileTheme),
-            visualDensity: visualDensity ?? theme.visualDensity,
             isThreeLine: isThreeLine,
             textDirection: textDirection,
             titleBaselineType: titleStyle.textBaseline,
@@ -984,13 +972,11 @@ class _ListTile extends RenderObjectWidget {
     this.trailing,
     @required this.isThreeLine,
     @required this.isDense,
-    @required this.visualDensity,
     @required this.textDirection,
     @required this.titleBaselineType,
     this.subtitleBaselineType,
   })  : assert(isThreeLine != null),
         assert(isDense != null),
-        assert(visualDensity != null),
         assert(textDirection != null),
         assert(titleBaselineType != null),
         super(key: key);
@@ -1001,7 +987,6 @@ class _ListTile extends RenderObjectWidget {
   final Widget trailing;
   final bool isThreeLine;
   final bool isDense;
-  final VisualDensity visualDensity;
   final TextDirection textDirection;
   final TextBaseline titleBaselineType;
   final TextBaseline subtitleBaselineType;
@@ -1014,7 +999,6 @@ class _ListTile extends RenderObjectWidget {
     return _RenderListTile(
       isThreeLine: isThreeLine,
       isDense: isDense,
-      visualDensity: visualDensity,
       textDirection: textDirection,
       titleBaselineType: titleBaselineType,
       subtitleBaselineType: subtitleBaselineType,
@@ -1026,7 +1010,6 @@ class _ListTile extends RenderObjectWidget {
     renderObject
       ..isThreeLine = isThreeLine
       ..isDense = isDense
-      ..visualDensity = visualDensity
       ..textDirection = textDirection
       ..titleBaselineType = titleBaselineType
       ..subtitleBaselineType = subtitleBaselineType;
@@ -1150,18 +1133,15 @@ class _ListTileElement extends RenderObjectElement {
 class _RenderListTile extends RenderBox {
   _RenderListTile({
     @required bool isDense,
-    @required VisualDensity visualDensity,
     @required bool isThreeLine,
     @required TextDirection textDirection,
     @required TextBaseline titleBaselineType,
     TextBaseline subtitleBaselineType,
   })  : assert(isDense != null),
-        assert(visualDensity != null),
         assert(isThreeLine != null),
         assert(textDirection != null),
         assert(titleBaselineType != null),
         _isDense = isDense,
-        _visualDensity = visualDensity,
         _isThreeLine = isThreeLine,
         _textDirection = textDirection,
         _titleBaselineType = titleBaselineType,
@@ -1169,7 +1149,7 @@ class _RenderListTile extends RenderBox {
 
   static const double _minLeadingWidth = 40.0;
   // The horizontal gap between the titles and the leading/trailing widgets
-  double get _horizontalTitleGap => 16.0 + visualDensity.horizontal * 2.0;
+  double get _horizontalTitleGap => 16.0;
   // The minimum padding on the top and bottom of the title and subtitle widgets.
   static const double _minVerticalPadding = 4.0;
 
@@ -1231,15 +1211,6 @@ class _RenderListTile extends RenderBox {
     assert(value != null);
     if (_isDense == value) return;
     _isDense = value;
-    markNeedsLayout();
-  }
-
-  VisualDensity get visualDensity => _visualDensity;
-  VisualDensity _visualDensity;
-  set visualDensity(VisualDensity value) {
-    assert(value != null);
-    if (_visualDensity == value) return;
-    _visualDensity = value;
     markNeedsLayout();
   }
 
@@ -1352,10 +1323,9 @@ class _RenderListTile extends RenderBox {
     final bool isTwoLine = !isThreeLine && hasSubtitle;
     final bool isOneLine = !isThreeLine && !hasSubtitle;
 
-    final Offset baseDensity = visualDensity.baseSizeAdjustment;
-    if (isOneLine) return (isDense ? 48.0 : 56.0) + baseDensity.dy;
-    if (isTwoLine) return (isDense ? 64.0 : 72.0) + baseDensity.dy;
-    return (isDense ? 76.0 : 88.0) + baseDensity.dy;
+    if (isOneLine) return (isDense ? 48.0 : 56.0);
+    if (isTwoLine) return (isDense ? 64.0 : 72.0);
+    return (isDense ? 76.0 : 88.0);
   }
 
   @override
@@ -1404,7 +1374,6 @@ class _RenderListTile extends RenderBox {
     final bool hasTrailing = trailing != null;
     final bool isTwoLine = !isThreeLine && hasSubtitle;
     final bool isOneLine = !isThreeLine && !hasSubtitle;
-    final Offset densityAdjustment = visualDensity.baseSizeAdjustment;
 
     final BoxConstraints maxIconHeightConstraint = BoxConstraints(
       // One-line trailing and leading widget heights do not follow
@@ -1412,7 +1381,7 @@ class _RenderListTile extends RenderBox {
       // to accessibility requirements for smallest tappable widget.
       // Two- and three-line trailing widget heights are constrained
       // properly according to the Material spec.
-      maxHeight: (isDense ? 48.0 : 56.0) + densityAdjustment.dy,
+      maxHeight: (isDense ? 48.0 : 56.0),
     );
     final BoxConstraints looseConstraints = constraints.loosen();
     final BoxConstraints iconConstraints =
@@ -1462,9 +1431,8 @@ class _RenderListTile extends RenderBox {
     } else {
       assert(subtitleBaselineType != null);
       titleY = titleBaseline - _boxBaseline(title, titleBaselineType);
-      subtitleY = subtitleBaseline -
-          _boxBaseline(subtitle, subtitleBaselineType) +
-          visualDensity.vertical * 2.0;
+      subtitleY =
+          subtitleBaseline - _boxBaseline(subtitle, subtitleBaselineType);
       tileHeight = defaultTileHeight;
 
       // If the title and subtitle overlap, move the title upwards by half

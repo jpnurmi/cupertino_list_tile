@@ -1547,44 +1547,6 @@ void main() {
     expect(tapped, isTrue);
   });
 
-  testWidgets('ListTile responds to density changes.',
-      (WidgetTester tester) async {
-    const Key key = Key('test');
-    Future<void> buildTest(VisualDensity visualDensity) async {
-      return await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: Center(
-              child: ListTile(
-                key: key,
-                onTap: () {},
-                autofocus: true,
-                visualDensity: visualDensity,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    await buildTest(const VisualDensity());
-    final RenderBox box = tester.renderObject(find.byKey(key));
-    await tester.pumpAndSettle();
-    expect(box.size, equals(const Size(800, 56)));
-
-    await buildTest(const VisualDensity(horizontal: 3.0, vertical: 3.0));
-    await tester.pumpAndSettle();
-    expect(box.size, equals(const Size(800, 68)));
-
-    await buildTest(const VisualDensity(horizontal: -3.0, vertical: -3.0));
-    await tester.pumpAndSettle();
-    expect(box.size, equals(const Size(800, 44)));
-
-    await buildTest(const VisualDensity(horizontal: 3.0, vertical: -3.0));
-    await tester.pumpAndSettle();
-    expect(box.size, equals(const Size(800, 44)));
-  });
-
   testWidgets('ListTile changes mouse cursor when hovered',
       (WidgetTester tester) async {
     // Test ListTile() constructor
