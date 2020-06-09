@@ -17,7 +17,7 @@ typedef _CheckContext = bool Function(BuildContext context);
 /// For a variant of this widget that is specialized for rectangular areas that
 /// always clip splashes, see [InkWell].
 ///
-/// An [InkResponse] widget does two things when responding to a tap:
+/// An [ListTileBackground] widget does two things when responding to a tap:
 ///
 ///  * It starts to animate a _highlight_. The shape of the highlight is
 ///    determined by [highlightShape]. If it is a [BoxShape.circle], the
@@ -33,29 +33,29 @@ typedef _CheckContext = bool Function(BuildContext context);
 ///    location. Otherwise, the splash migrates to the center of the box as it
 ///    grows.
 ///
-/// The following two diagrams show how [InkResponse] looks when tapped if the
+/// The following two diagrams show how [ListTileBackground] looks when tapped if the
 /// [highlightShape] is [BoxShape.circle] (the default) and [containedInkWell]
 /// is false (also the default).
 ///
-/// The first diagram shows how it looks if the [InkResponse] is relatively
+/// The first diagram shows how it looks if the [ListTileBackground] is relatively
 /// large:
 ///
 /// ![The highlight is a disc centered in the box, smaller than the child widget.](https://flutter.github.io/assets-for-api-docs/assets/material/ink_response_large.png)
 ///
-/// The second diagram shows how it looks if the [InkResponse] is small:
+/// The second diagram shows how it looks if the [ListTileBackground] is small:
 ///
 /// ![The highlight is a disc overflowing the box, centered on the child.](https://flutter.github.io/assets-for-api-docs/assets/material/ink_response_small.png)
 ///
 /// The main thing to notice from these diagrams is that the splashes happily
 /// exceed the bounds of the widget (because [containedInkWell] is false).
 ///
-/// The following diagram shows the effect when the [InkResponse] has a
+/// The following diagram shows the effect when the [ListTileBackground] has a
 /// [highlightShape] of [BoxShape.rectangle] with [containedInkWell] set to
 /// true. These are the values used by [InkWell].
 ///
 /// ![The highlight is a rectangle the size of the box.](https://flutter.github.io/assets-for-api-docs/assets/material/ink_well.png)
 ///
-/// The [InkResponse] widget must have a [Material] widget as an ancestor. The
+/// The [ListTileBackground] widget must have a [Material] widget as an ancestor. The
 /// [Material] widget is where the ink reactions are actually painted. This
 /// matches the material design premise wherein the [Material] is what is
 /// actually reacting to touches by spreading ink.
@@ -72,7 +72,7 @@ typedef _CheckContext = bool Function(BuildContext context);
 /// ### The ink splashes aren't visible!
 ///
 /// If there is an opaque graphic, e.g. painted using a [Container], [Image], or
-/// [DecoratedBox], between the [Material] widget and the [InkResponse] widget,
+/// [DecoratedBox], between the [Material] widget and the [ListTileBackground] widget,
 /// then the splash won't be visible because it will be under the opaque graphic.
 /// This is because ink splashes draw on the underlying [Material] itself, as
 /// if the ink was spreading inside the material.
@@ -83,7 +83,7 @@ typedef _CheckContext = bool Function(BuildContext context);
 ///
 /// If this is not possible for some reason, e.g. because you are using an
 /// opaque [CustomPaint] widget, alternatively consider using a second
-/// [Material] above the opaque widget but below the [InkResponse] (as an
+/// [Material] above the opaque widget but below the [ListTileBackground] (as an
 /// ancestor to the ink response). The [MaterialType.transparency] material
 /// kind can be used for this purpose.
 ///
@@ -91,15 +91,15 @@ typedef _CheckContext = bool Function(BuildContext context);
 ///
 ///  * [GestureDetector], for listening for gestures without ink splashes.
 ///  * [RaisedButton] and [FlatButton], two kinds of buttons in material design.
-///  * [IconButton], which combines [InkResponse] with an [Icon].
-class InkResponse extends StatelessWidget {
+///  * [IconButton], which combines [ListTileBackground] with an [Icon].
+class ListTileBackground extends StatelessWidget {
   /// Creates an area of a [Material] that responds to touch.
   ///
   /// Must have an ancestor [Material] widget in which to cause ink reactions.
   ///
   /// The [mouseCursor], [highlightShape],
   /// and [excludeFromSemantics] arguments must not be null.
-  const InkResponse({
+  const ListTileBackground({
     Key key,
     this.child,
     this.onTap,
@@ -186,8 +186,8 @@ class InkResponse extends StatelessWidget {
   /// [hoverColor]).
   ///
   /// If the shape is [BoxShape.circle], then the highlight is centered on the
-  /// [InkResponse]. If the shape is [BoxShape.rectangle], then the highlight
-  /// fills the [InkResponse], or the rectangle provided by [getRectCallback] if
+  /// [ListTileBackground]. If the shape is [BoxShape.rectangle], then the highlight
+  /// fills the [ListTileBackground], or the rectangle provided by [getRectCallback] if
   /// the callback is specified.
   ///
   /// See also:
@@ -202,7 +202,7 @@ class InkResponse extends StatelessWidget {
   ///
   /// Splashes grow up to this size. By default, this size is determined from
   /// the size of the rectangle provided by [getRectCallback], or the size of
-  /// the [InkResponse] itself.
+  /// the [ListTileBackground] itself.
   ///
   /// See also:
   ///
@@ -288,7 +288,7 @@ class InkResponse extends StatelessWidget {
   /// the splash effects if [containedInkWell] is true.
   ///
   /// This method is intended to be overridden by descendants that
-  /// specialize [InkResponse] for unusual cases. For example,
+  /// specialize [ListTileBackground] for unusual cases. For example,
   /// [TableRowInkWell] implements this method to return the rectangle
   /// corresponding to the row that the widget is in.
   ///
@@ -299,7 +299,7 @@ class InkResponse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _InkResponseStateWidget(
+    return _ListTileBackgroundStateWidget(
       child: child,
       onTap: onTap,
       onTapDown: onTapDown,
@@ -330,7 +330,7 @@ class InkResponse extends StatelessWidget {
   /// this class.
   ///
   /// This method is intended to be overridden by descendants that
-  /// specialize [InkResponse] for unusual cases. For example,
+  /// specialize [ListTileBackground] for unusual cases. For example,
   /// [TableRowInkWell] implements this method to verify that the widget is
   /// in a table.
   @mustCallSuper
@@ -340,8 +340,8 @@ class InkResponse extends StatelessWidget {
   }
 }
 
-class _InkResponseStateWidget extends StatefulWidget {
-  const _InkResponseStateWidget({
+class _ListTileBackgroundStateWidget extends StatefulWidget {
+  const _ListTileBackgroundStateWidget({
     this.child,
     this.onTap,
     this.onTapDown,
@@ -396,7 +396,7 @@ class _InkResponseStateWidget extends StatefulWidget {
   final _CheckContext debugCheckContext;
 
   @override
-  _InkResponseState createState() => _InkResponseState();
+  _ListTileBackgroundState createState() => _ListTileBackgroundState();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -421,14 +421,14 @@ class _InkResponseStateWidget extends StatefulWidget {
 }
 
 /// Used to index the allocated highlights for the different types of highlights
-/// in [_InkResponseState].
+/// in [_ListTileBackgroundState].
 enum _HighlightType {
   pressed,
   hover,
   focus,
 }
 
-class _InkResponseState extends State<_InkResponseStateWidget> {
+class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
   bool _hovering = false;
   Map<Type, Action<Intent>> _actionMap;
 
@@ -447,7 +447,7 @@ class _InkResponseState extends State<_InkResponseStateWidget> {
   }
 
   @override
-  void didUpdateWidget(_InkResponseStateWidget oldWidget) {
+  void didUpdateWidget(_ListTileBackgroundStateWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (_isWidgetEnabled(widget) != _isWidgetEnabled(oldWidget)) {
       _handleHoverChange(_hovering);
@@ -575,7 +575,7 @@ class _InkResponseState extends State<_InkResponseStateWidget> {
     }
   }
 
-  bool _isWidgetEnabled(_InkResponseStateWidget widget) {
+  bool _isWidgetEnabled(_ListTileBackgroundStateWidget widget) {
     return widget.onTap != null ||
         widget.onDoubleTap != null ||
         widget.onLongPress != null;
