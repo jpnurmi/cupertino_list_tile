@@ -475,16 +475,9 @@ enum _HighlightType {
   focus,
 }
 
-class _InkResponseState extends State<_InkResponseStateWidget>
-    with AutomaticKeepAliveClientMixin<_InkResponseStateWidget> {
+class _InkResponseState extends State<_InkResponseStateWidget> {
   bool _hovering = false;
-  final Map<_HighlightType, InkHighlight> _highlights =
-      <_HighlightType, InkHighlight>{};
   Map<Type, Action<Intent>> _actionMap;
-
-  bool get highlightsExist => _highlights.values
-      .where((InkHighlight highlight) => highlight != null)
-      .isNotEmpty;
 
   void _handleAction(ActivateIntent intent) {
     _handleTap(context);
@@ -516,9 +509,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
     super.dispose();
   }
 
-  @override
-  bool get wantKeepAlive => highlightsExist;
-
   Color getHighlightColorForType(_HighlightType type) {
     switch (type) {
       case _HighlightType.pressed:
@@ -545,38 +535,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
   }
 
   void updateHighlight(_HighlightType type, {@required bool value}) {
-    final InkHighlight highlight = _highlights[type];
-    void handleInkRemoval() {
-      assert(_highlights[type] != null);
-      _highlights[type] = null;
-      updateKeepAlive();
-    }
-
-    if (value == (highlight != null && highlight.active)) return;
-    if (value) {
-      if (highlight == null) {
-        final RenderBox referenceBox = context.findRenderObject() as RenderBox;
-        _highlights[type] = InkHighlight(
-          controller: Material.of(context),
-          referenceBox: referenceBox,
-          color: getHighlightColorForType(type),
-          shape: widget.highlightShape,
-          borderRadius: widget.borderRadius,
-          customBorder: widget.customBorder,
-          rectCallback: widget.getRectCallback(referenceBox),
-          onRemoved: handleInkRemoval,
-          textDirection: Directionality.of(context),
-          fadeDuration: getFadeDurationForType(type),
-        );
-        updateKeepAlive();
-      } else {
-        highlight.activate();
-      }
-    } else {
-      highlight.deactivate();
-    }
-    assert(value == (_highlights[type] != null && _highlights[type].active));
-
     switch (type) {
       case _HighlightType.pressed:
         if (widget.onHighlightChanged != null) widget.onHighlightChanged(value);
@@ -666,15 +624,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
     }
   }
 
-  @override
-  void deactivate() {
-    for (final _HighlightType highlight in _highlights.keys) {
-      _highlights[highlight]?.dispose();
-      _highlights[highlight] = null;
-    }
-    super.deactivate();
-  }
-
   bool _isWidgetEnabled(_InkResponseStateWidget widget) {
     return widget.onTap != null ||
         widget.onDoubleTap != null ||
@@ -709,10 +658,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
   @override
   Widget build(BuildContext context) {
     assert(widget.debugCheckContext(context));
-    super.build(context); // See AutomaticKeepAliveClientMixin.
-    for (final _HighlightType type in _highlights.keys) {
-      _highlights[type]?.color = getHighlightColorForType(type);
-    }
     return Actions(
       actions: _actionMap,
       child: Focus(
