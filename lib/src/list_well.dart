@@ -11,30 +11,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:flutter/material.dart';
 
-abstract class _ParentInkResponseState {
-  void markChildInkResponsePressed(
-      _ParentInkResponseState childState, bool value);
-}
-
-class _ParentInkResponseProvider extends InheritedWidget {
-  const _ParentInkResponseProvider({
-    this.state,
-    Widget child,
-  }) : super(child: child);
-
-  final _ParentInkResponseState state;
-
-  @override
-  bool updateShouldNotify(_ParentInkResponseProvider oldWidget) =>
-      state != oldWidget.state;
-
-  static _ParentInkResponseState of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_ParentInkResponseProvider>()
-        ?.state;
-  }
-}
-
 typedef _GetRectCallback = RectCallback Function(RenderBox referenceBox);
 typedef _CheckContext = bool Function(BuildContext context);
 
@@ -357,8 +333,6 @@ class InkResponse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _ParentInkResponseState parentState =
-        _ParentInkResponseProvider.of(context);
     return _InkResponseStateWidget(
       child: child,
       onTap: onTap,
@@ -383,7 +357,6 @@ class InkResponse extends StatelessWidget {
       canRequestFocus: canRequestFocus,
       onFocusChange: onFocusChange,
       autofocus: autofocus,
-      parentState: parentState,
       getRectCallback: getRectCallback,
       debugCheckContext: debugCheckContext,
     );
@@ -429,7 +402,6 @@ class _InkResponseStateWidget extends StatefulWidget {
     this.canRequestFocus = true,
     this.onFocusChange,
     this.autofocus = false,
-    this.parentState,
     this.getRectCallback,
     this.debugCheckContext,
   })  : assert(containedInkWell != null),
@@ -463,7 +435,6 @@ class _InkResponseStateWidget extends StatefulWidget {
   final bool autofocus;
   final FocusNode focusNode;
   final bool canRequestFocus;
-  final _ParentInkResponseState parentState;
   final _GetRectCallback getRectCallback;
   final _CheckContext debugCheckContext;
 
@@ -505,8 +476,7 @@ enum _HighlightType {
 }
 
 class _InkResponseState extends State<_InkResponseStateWidget>
-    with AutomaticKeepAliveClientMixin<_InkResponseStateWidget>
-    implements _ParentInkResponseState {
+    with AutomaticKeepAliveClientMixin<_InkResponseStateWidget> {
   bool _hovering = false;
   final Map<_HighlightType, InkHighlight> _highlights =
       <_HighlightType, InkHighlight>{};
@@ -515,26 +485,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
   bool get highlightsExist => _highlights.values
       .where((InkHighlight highlight) => highlight != null)
       .isNotEmpty;
-
-  final ObserverList<_ParentInkResponseState> _activeChildren =
-      ObserverList<_ParentInkResponseState>();
-  @override
-  void markChildInkResponsePressed(
-      _ParentInkResponseState childState, bool value) {
-    assert(childState != null);
-    final bool lastAnyPressed = _anyChildInkResponsePressed;
-    if (value) {
-      _activeChildren.add(childState);
-    } else {
-      _activeChildren.remove(childState);
-    }
-    final bool nowAnyPressed = _anyChildInkResponsePressed;
-    if (nowAnyPressed != lastAnyPressed) {
-      widget.parentState?.markChildInkResponsePressed(this, nowAnyPressed);
-    }
-  }
-
-  bool get _anyChildInkResponsePressed => _activeChildren.isNotEmpty;
 
   void _handleAction(ActivateIntent intent) {
     _handleTap(context);
@@ -602,9 +552,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
       updateKeepAlive();
     }
 
-    if (type == _HighlightType.pressed) {
-      widget.parentState?.markChildInkResponsePressed(this, value);
-    }
     if (value == (highlight != null && highlight.active)) return;
     if (value) {
       if (highlight == null) {
@@ -688,7 +635,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
   }
 
   void _handleTapDown(TapDownDetails details) {
-    if (_anyChildInkResponsePressed) return;
     if (widget.onTapDown != null) {
       widget.onTapDown(details);
     }
@@ -726,7 +672,6 @@ class _InkResponseState extends State<_InkResponseStateWidget>
       _highlights[highlight]?.dispose();
       _highlights[highlight] = null;
     }
-    widget.parentState?.markChildInkResponsePressed(this, false);
     super.deactivate();
   }
 
@@ -768,31 +713,28 @@ class _InkResponseState extends State<_InkResponseStateWidget>
     for (final _HighlightType type in _highlights.keys) {
       _highlights[type]?.color = getHighlightColorForType(type);
     }
-    return _ParentInkResponseProvider(
-      state: this,
-      child: Actions(
-        actions: _actionMap,
-        child: Focus(
-          focusNode: widget.focusNode,
-          canRequestFocus: _canRequestFocus,
-          onFocusChange: _handleFocusUpdate,
-          autofocus: widget.autofocus,
-          child: MouseRegion(
-            cursor: widget.mouseCursor,
-            onEnter: enabled ? _handleMouseEnter : null,
-            onExit: enabled ? _handleMouseExit : null,
-            child: GestureDetector(
-              onTapDown: enabled ? _handleTapDown : null,
-              onTap: enabled ? () => _handleTap(context) : null,
-              onTapCancel: enabled ? _handleTapCancel : null,
-              onDoubleTap: widget.onDoubleTap != null ? _handleDoubleTap : null,
-              onLongPress: widget.onLongPress != null
-                  ? () => _handleLongPress(context)
-                  : null,
-              behavior: HitTestBehavior.opaque,
-              excludeFromSemantics: widget.excludeFromSemantics,
-              child: widget.child,
-            ),
+    return Actions(
+      actions: _actionMap,
+      child: Focus(
+        focusNode: widget.focusNode,
+        canRequestFocus: _canRequestFocus,
+        onFocusChange: _handleFocusUpdate,
+        autofocus: widget.autofocus,
+        child: MouseRegion(
+          cursor: widget.mouseCursor,
+          onEnter: enabled ? _handleMouseEnter : null,
+          onExit: enabled ? _handleMouseExit : null,
+          child: GestureDetector(
+            onTapDown: enabled ? _handleTapDown : null,
+            onTap: enabled ? () => _handleTap(context) : null,
+            onTapCancel: enabled ? _handleTapCancel : null,
+            onDoubleTap: widget.onDoubleTap != null ? _handleDoubleTap : null,
+            onLongPress: widget.onLongPress != null
+                ? () => _handleLongPress(context)
+                : null,
+            behavior: HitTestBehavior.opaque,
+            excludeFromSemantics: widget.excludeFromSemantics,
+            child: widget.child,
           ),
         ),
       ),
