@@ -431,6 +431,7 @@ enum _HighlightType {
 class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
   bool _hovering = false;
   Map<Type, Action<Intent>> _actionMap;
+  Color _highlightColor;
 
   void _handleAction(ActivateIntent intent) {
     _handleTap(context);
@@ -498,6 +499,13 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
       case _HighlightType.focus:
         break;
     }
+    _setHighlightColor(value ? getHighlightColorForType(type) : null);
+  }
+
+  void _setHighlightColor(Color color) {
+    setState(() {
+      _highlightColor = color;
+    });
   }
 
   void _handleFocusHighlightModeChange(FocusHighlightMode mode) {
@@ -630,7 +638,10 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
                 : null,
             behavior: HitTestBehavior.opaque,
             excludeFromSemantics: widget.excludeFromSemantics,
-            child: widget.child,
+            child: Container(
+              color: _highlightColor,
+              child: widget.child,
+            ),
           ),
         ),
       ),
