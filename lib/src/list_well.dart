@@ -2,15 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:flutter/material.dart';
-
+typedef RectCallback = Rect Function();
 typedef _GetRectCallback = RectCallback Function(RenderBox referenceBox);
 typedef _CheckContext = bool Function(BuildContext context);
 
@@ -358,7 +355,6 @@ class InkResponse extends StatelessWidget {
   /// in a table.
   @mustCallSuper
   bool debugCheckContext(BuildContext context) {
-    assert(debugCheckHasMaterial(context));
     assert(debugCheckHasDirectionality(context));
     return true;
   }
@@ -496,11 +492,11 @@ class _InkResponseState extends State<_InkResponseStateWidget> {
   Color getHighlightColorForType(_HighlightType type) {
     switch (type) {
       case _HighlightType.pressed:
-        return widget.highlightColor ?? Theme.of(context).highlightColor;
+        return widget.highlightColor;
       case _HighlightType.focus:
-        return widget.focusColor ?? Theme.of(context).focusColor;
+        return widget.focusColor;
       case _HighlightType.hover:
-        return widget.hoverColor ?? Theme.of(context).hoverColor;
+        return widget.hoverColor;
     }
     assert(false, 'Unhandled $_HighlightType $type');
     return null;
