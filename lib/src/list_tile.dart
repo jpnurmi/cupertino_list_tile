@@ -8,14 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import 'colors.dart';
-import 'constants.dart';
-import 'debug.dart';
-import 'divider.dart';
-import 'ink_well.dart';
-import 'material_state.dart';
-import 'theme.dart';
-import 'theme_data.dart';
+import 'package:flutter/material.dart';
 
 /// Defines the title font used for [ListTile] descendants of a [ListTileTheme].
 ///
