@@ -97,7 +97,7 @@ class InkResponse extends StatelessWidget {
   ///
   /// Must have an ancestor [Material] widget in which to cause ink reactions.
   ///
-  /// The [mouseCursor], [containedInkWell], [highlightShape],
+  /// The [mouseCursor], [highlightShape],
   /// and [excludeFromSemantics] arguments must not be null.
   const InkResponse({
     Key key,
@@ -110,7 +110,6 @@ class InkResponse extends StatelessWidget {
     this.onHighlightChanged,
     this.onHover,
     this.mouseCursor = MouseCursor.defer,
-    this.containedInkWell = false,
     this.highlightShape = BoxShape.circle,
     this.radius,
     this.borderRadius,
@@ -124,7 +123,6 @@ class InkResponse extends StatelessWidget {
     this.onFocusChange,
     this.autofocus = false,
   })  : assert(mouseCursor != null),
-        assert(containedInkWell != null),
         assert(highlightShape != null),
         assert(excludeFromSemantics != null),
         assert(autofocus != null),
@@ -180,22 +178,6 @@ class InkResponse extends StatelessWidget {
   /// cursor to the next region behing it in hit-test order.
   final MouseCursor mouseCursor;
 
-  /// Whether this ink response should be clipped its bounds.
-  ///
-  /// This flag also controls whether the splash migrates to the center of the
-  /// [InkResponse] or not. If [containedInkWell] is true, the splash remains
-  /// centered around the tap location. If it is false, the splash migrates to
-  /// the center of the [InkResponse] as it grows.
-  ///
-  /// See also:
-  ///
-  ///  * [highlightShape], the shape of the focus, hover, and pressed
-  ///    highlights.
-  ///  * [borderRadius], which controls the corners when the box is a rectangle.
-  ///  * [getRectCallback], which controls the size and position of the box when
-  ///    it is a rectangle.
-  final bool containedInkWell;
-
   /// The shape (e.g., circle, rectangle) to use for the highlight drawn around
   /// this part of the material when pressed, hovered over, or focused.
   ///
@@ -210,7 +192,6 @@ class InkResponse extends StatelessWidget {
   ///
   /// See also:
   ///
-  ///  * [containedInkWell], which controls clipping behavior.
   ///  * [borderRadius], which controls the corners when the box is a rectangle.
   ///  * [highlightColor], the color of the highlight.
   ///  * [getRectCallback], which controls the size and position of the box when
@@ -328,7 +309,6 @@ class InkResponse extends StatelessWidget {
       onHighlightChanged: onHighlightChanged,
       onHover: onHover,
       mouseCursor: mouseCursor,
-      containedInkWell: containedInkWell,
       highlightShape: highlightShape,
       radius: radius,
       borderRadius: borderRadius,
@@ -371,7 +351,6 @@ class _InkResponseStateWidget extends StatefulWidget {
     this.onHighlightChanged,
     this.onHover,
     this.mouseCursor = MouseCursor.defer,
-    this.containedInkWell = false,
     this.highlightShape = BoxShape.circle,
     this.radius,
     this.borderRadius,
@@ -386,8 +365,7 @@ class _InkResponseStateWidget extends StatefulWidget {
     this.autofocus = false,
     this.getRectCallback,
     this.debugCheckContext,
-  })  : assert(containedInkWell != null),
-        assert(highlightShape != null),
+  })  : assert(highlightShape != null),
         assert(excludeFromSemantics != null),
         assert(autofocus != null),
         assert(canRequestFocus != null),
@@ -402,7 +380,6 @@ class _InkResponseStateWidget extends StatefulWidget {
   final ValueChanged<bool> onHighlightChanged;
   final ValueChanged<bool> onHover;
   final MouseCursor mouseCursor;
-  final bool containedInkWell;
   final BoxShape highlightShape;
   final double radius;
   final BorderRadius borderRadius;
@@ -435,13 +412,9 @@ class _InkResponseStateWidget extends StatefulWidget {
         .add(IterableProperty<String>('gestures', gestures, ifEmpty: '<none>'));
     properties.add(DiagnosticsProperty<MouseCursor>('mouseCursor', mouseCursor,
         defaultValue: MouseCursor.defer));
-    properties.add(DiagnosticsProperty<bool>(
-        'containedInkWell', containedInkWell,
-        level: DiagnosticLevel.fine));
     properties.add(DiagnosticsProperty<BoxShape>(
       'highlightShape',
       highlightShape,
-      description: '${containedInkWell ? "clipped to " : ""}$highlightShape',
       showName: false,
     ));
   }
@@ -793,7 +766,6 @@ class InkWell extends InkResponse {
           onHighlightChanged: onHighlightChanged,
           onHover: onHover,
           mouseCursor: mouseCursor,
-          containedInkWell: true,
           highlightShape: BoxShape.rectangle,
           focusColor: focusColor,
           hoverColor: hoverColor,
