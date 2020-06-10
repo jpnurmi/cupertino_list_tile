@@ -5,164 +5,21 @@
 import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        ListTileTheme,
+        Divider,
+        MaterialState,
+        MaterialStateMouseCursor,
+        MaterialStateProperty,
+        kThemeChangeDuration;
+export 'package:flutter/material.dart' show ListTileTheme;
 
 import 'list_tile_background.dart';
-
-/// Defines the title font used for [ListTile] descendants of a [ListTileTheme].
-///
-/// List tiles that appear in a [Drawer] use the theme's [TextTheme.bodyText1]
-/// text style, which is a little smaller than the theme's [TextTheme.subtitle1]
-/// text style, which is used by default.
-enum ListTileStyle {
-  /// Use a title font that's appropriate for a [ListTile] in a list.
-  list,
-
-  /// Use a title font that's appropriate for a [ListTile] that appears in a [Drawer].
-  drawer,
-}
-
-/// An inherited widget that defines color and style parameters for [ListTile]s
-/// in this widget's subtree.
-///
-/// Values specified here are used for [ListTile] properties that are not given
-/// an explicit non-null value.
-///
-/// The [Drawer] widget specifies a tile theme for its children which sets
-/// [style] to [ListTileStyle.drawer].
-class ListTileTheme extends InheritedTheme {
-  /// Creates a list tile theme that controls the color and style parameters for
-  /// [ListTile]s.
-  const ListTileTheme({
-    Key key,
-    this.dense = false,
-    this.style = ListTileStyle.list,
-    this.selectedColor,
-    this.iconColor,
-    this.textColor,
-    this.contentPadding,
-    Widget child,
-  }) : super(key: key, child: child);
-
-  /// Creates a list tile theme that controls the color and style parameters for
-  /// [ListTile]s, and merges in the current list tile theme, if any.
-  ///
-  /// The [child] argument must not be null.
-  static Widget merge({
-    Key key,
-    bool dense,
-    ListTileStyle style,
-    Color selectedColor,
-    Color iconColor,
-    Color textColor,
-    EdgeInsetsGeometry contentPadding,
-    @required Widget child,
-  }) {
-    assert(child != null);
-    return Builder(
-      builder: (BuildContext context) {
-        final ListTileTheme parent = ListTileTheme.of(context);
-        return ListTileTheme(
-          key: key,
-          dense: dense ?? parent.dense,
-          style: style ?? parent.style,
-          selectedColor: selectedColor ?? parent.selectedColor,
-          iconColor: iconColor ?? parent.iconColor,
-          textColor: textColor ?? parent.textColor,
-          contentPadding: contentPadding ?? parent.contentPadding,
-          child: child,
-        );
-      },
-    );
-  }
-
-  /// If true then [ListTile]s will have the vertically dense layout.
-  final bool dense;
-
-  /// If specified, [style] defines the font used for [ListTile] titles.
-  final ListTileStyle style;
-
-  /// If specified, the color used for icons and text when a [ListTile] is selected.
-  final Color selectedColor;
-
-  /// If specified, the icon color used for enabled [ListTile]s that are not selected.
-  final Color iconColor;
-
-  /// If specified, the text color used for enabled [ListTile]s that are not selected.
-  final Color textColor;
-
-  /// The tile's internal padding.
-  ///
-  /// Insets a [ListTile]'s contents: its [leading], [title], [subtitle],
-  /// and [trailing] widgets.
-  final EdgeInsetsGeometry contentPadding;
-
-  /// The closest instance of this class that encloses the given context.
-  ///
-  /// Typical usage is as follows:
-  ///
-  /// ```dart
-  /// ListTileTheme theme = ListTileTheme.of(context);
-  /// ```
-  static ListTileTheme of(BuildContext context) {
-    final ListTileTheme result =
-        context.dependOnInheritedWidgetOfExactType<ListTileTheme>();
-    return result ?? const ListTileTheme();
-  }
-
-  @override
-  Widget wrap(BuildContext context, Widget child) {
-    final ListTileTheme ancestorTheme =
-        context.findAncestorWidgetOfExactType<ListTileTheme>();
-    return identical(this, ancestorTheme)
-        ? child
-        : ListTileTheme(
-            dense: dense,
-            style: style,
-            selectedColor: selectedColor,
-            iconColor: iconColor,
-            textColor: textColor,
-            contentPadding: contentPadding,
-            child: child,
-          );
-  }
-
-  @override
-  bool updateShouldNotify(ListTileTheme oldWidget) {
-    return dense != oldWidget.dense ||
-        style != oldWidget.style ||
-        selectedColor != oldWidget.selectedColor ||
-        iconColor != oldWidget.iconColor ||
-        textColor != oldWidget.textColor ||
-        contentPadding != oldWidget.contentPadding;
-  }
-}
-
-/// Where to place the control in widgets that use [ListTile] to position a
-/// control next to a label.
-///
-/// See also:
-///
-///  * [CheckboxListTile], which combines a [ListTile] with a [Checkbox].
-///  * [RadioListTile], which combines a [ListTile] with a [Radio] button.
-///  * [SwitchListTile], which combines a [ListTile] with a [Switch].
-enum ListTileControlAffinity {
-  /// Position the control on the leading edge, and the secondary widget, if
-  /// any, on the trailing edge.
-  leading,
-
-  /// Position the control on the trailing edge, and the secondary widget, if
-  /// any, on the leading edge.
-  trailing,
-
-  /// Position the control relative to the text in the fashion that is typical
-  /// for the current platform, and place the secondary widget on the opposite
-  /// side.
-  platform,
-}
 
 /// A single fixed-height row that typically contains some text as well as
 /// a leading or trailing icon.
@@ -794,43 +651,35 @@ class ListTile extends StatelessWidget {
     if (isNotEmpty) yield tile;
   }
 
-  Color _iconColor(ThemeData theme, ListTileTheme tileTheme) {
-    if (!enabled) return theme.disabledColor;
+  Color _iconColor(
+      BuildContext context, CupertinoThemeData theme, ListTileTheme tileTheme) {
+    if (!enabled)
+      return CupertinoDynamicColor.resolve(
+          CupertinoColors.placeholderText, context);
 
     if (selected && tileTheme?.selectedColor != null)
       return tileTheme.selectedColor;
 
     if (!selected && tileTheme?.iconColor != null) return tileTheme.iconColor;
 
-    switch (theme.brightness) {
-      case Brightness.light:
-        return selected ? theme.primaryColor : Colors.black45;
-      case Brightness.dark:
-        return selected
-            ? theme.accentColor
-            : null; // null - use current icon theme color
-    }
-    assert(theme.brightness != null);
+    if (selected) return theme.primaryColor;
+
     return null;
   }
 
-  Color _textColor(
-      ThemeData theme, ListTileTheme tileTheme, Color defaultColor) {
-    if (!enabled) return theme.disabledColor;
+  Color _textColor(BuildContext context, CupertinoThemeData theme,
+      ListTileTheme tileTheme, Color defaultColor) {
+    if (!enabled)
+      return CupertinoDynamicColor.resolve(
+          CupertinoColors.placeholderText, context);
 
     if (selected && tileTheme?.selectedColor != null)
       return tileTheme.selectedColor;
 
     if (!selected && tileTheme?.textColor != null) return tileTheme.textColor;
 
-    if (selected) {
-      switch (theme.brightness) {
-        case Brightness.light:
-          return theme.primaryColor;
-        case Brightness.dark:
-          return theme.accentColor;
-      }
-    }
+    if (selected) return theme.primaryColor;
+
     return defaultColor;
   }
 
@@ -838,30 +687,20 @@ class ListTile extends StatelessWidget {
     return dense ?? tileTheme?.dense ?? false;
   }
 
-  TextStyle _titleTextStyle(ThemeData theme, ListTileTheme tileTheme) {
-    TextStyle style;
-    if (tileTheme != null) {
-      switch (tileTheme.style) {
-        case ListTileStyle.drawer:
-          style = theme.textTheme.bodyText1;
-          break;
-        case ListTileStyle.list:
-          style = theme.textTheme.subtitle1;
-          break;
-      }
-    } else {
-      style = theme.textTheme.subtitle1;
-    }
-    final Color color = _textColor(theme, tileTheme, style.color);
+  TextStyle _titleTextStyle(
+      BuildContext context, CupertinoThemeData theme, ListTileTheme tileTheme) {
+    TextStyle style = theme.textTheme.textStyle;
+    final Color color = _textColor(context, theme, tileTheme, style.color);
     return _isDenseLayout(tileTheme)
         ? style.copyWith(fontSize: 13.0, color: color)
         : style.copyWith(color: color);
   }
 
-  TextStyle _subtitleTextStyle(ThemeData theme, ListTileTheme tileTheme) {
-    final TextStyle style = theme.textTheme.bodyText2;
+  TextStyle _subtitleTextStyle(
+      BuildContext context, CupertinoThemeData theme, ListTileTheme tileTheme) {
+    final TextStyle style = theme.textTheme.tabLabelTextStyle;
     final Color color =
-        _textColor(theme, tileTheme, theme.textTheme.caption.color);
+        _textColor(context, theme, tileTheme, theme.textTheme.textStyle.color);
     return _isDenseLayout(tileTheme)
         ? style.copyWith(color: color, fontSize: 12.0)
         : style.copyWith(color: color);
@@ -869,13 +708,13 @@ class ListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasMaterial(context));
-    final ThemeData theme = Theme.of(context);
+    final CupertinoThemeData theme = CupertinoTheme.of(context);
     final ListTileTheme tileTheme = ListTileTheme.of(context);
 
     IconThemeData iconThemeData;
     if (leading != null || trailing != null)
-      iconThemeData = IconThemeData(color: _iconColor(theme, tileTheme));
+      iconThemeData =
+          IconThemeData(color: _iconColor(context, theme, tileTheme));
 
     Widget leadingIcon;
     if (leading != null) {
@@ -885,7 +724,7 @@ class ListTile extends StatelessWidget {
       );
     }
 
-    final TextStyle titleStyle = _titleTextStyle(theme, tileTheme);
+    final TextStyle titleStyle = _titleTextStyle(context, theme, tileTheme);
     final Widget titleText = AnimatedDefaultTextStyle(
       style: titleStyle,
       duration: kThemeChangeDuration,
@@ -895,7 +734,7 @@ class ListTile extends StatelessWidget {
     Widget subtitleText;
     TextStyle subtitleStyle;
     if (subtitle != null) {
-      subtitleStyle = _subtitleTextStyle(theme, tileTheme);
+      subtitleStyle = _subtitleTextStyle(context, theme, tileTheme);
       subtitleText = AnimatedDefaultTextStyle(
         style: subtitleStyle,
         duration: kThemeChangeDuration,
@@ -953,8 +792,10 @@ class ListTile extends StatelessWidget {
             isDense: _isDenseLayout(tileTheme),
             isThreeLine: isThreeLine,
             textDirection: textDirection,
-            titleBaselineType: titleStyle.textBaseline,
-            subtitleBaselineType: subtitleStyle?.textBaseline,
+            titleBaselineType:
+                titleStyle.textBaseline ?? TextBaseline.alphabetic,
+            subtitleBaselineType:
+                subtitleStyle?.textBaseline ?? TextBaseline.alphabetic,
           ),
         ),
       ),
