@@ -97,8 +97,7 @@ class ListTileBackground extends StatelessWidget {
   ///
   /// Must have an ancestor [Material] widget in which to cause ink reactions.
   ///
-  /// The [mouseCursor], [highlightShape],
-  /// and [excludeFromSemantics] arguments must not be null.
+  /// The [mouseCursor] and [excludeFromSemantics] arguments must not be null.
   const ListTileBackground({
     Key key,
     this.child,
@@ -110,7 +109,6 @@ class ListTileBackground extends StatelessWidget {
     this.onHighlightChanged,
     this.onHover,
     this.mouseCursor = MouseCursor.defer,
-    this.highlightShape = BoxShape.rectangle,
     this.radius,
     this.borderRadius,
     this.customBorder,
@@ -123,7 +121,6 @@ class ListTileBackground extends StatelessWidget {
     this.onFocusChange,
     this.autofocus = false,
   })  : assert(mouseCursor != null),
-        assert(highlightShape != null),
         assert(excludeFromSemantics != null),
         assert(autofocus != null),
         assert(canRequestFocus != null),
@@ -178,26 +175,6 @@ class ListTileBackground extends StatelessWidget {
   /// cursor to the next region behing it in hit-test order.
   final MouseCursor mouseCursor;
 
-  /// The shape (e.g., circle, rectangle) to use for the highlight drawn around
-  /// this part of the material when pressed, hovered over, or focused.
-  ///
-  /// The same shape is used for the pressed highlight (see [pressColor]),
-  /// the focus highlight (see [focusColor]), and the hover highlight (see
-  /// [hoverColor]).
-  ///
-  /// If the shape is [BoxShape.circle], then the highlight is centered on the
-  /// [ListTileBackground]. If the shape is [BoxShape.rectangle], then the highlight
-  /// fills the [ListTileBackground], or the rectangle provided by [getRectCallback] if
-  /// the callback is specified.
-  ///
-  /// See also:
-  ///
-  ///  * [borderRadius], which controls the corners when the box is a rectangle.
-  ///  * [pressColor], the color of the highlight.
-  ///  * [getRectCallback], which controls the size and position of the box when
-  ///    it is a rectangle.
-  final BoxShape highlightShape;
-
   /// The radius of the ink splash.
   ///
   /// Splashes grow up to this size. By default, this size is determined from
@@ -225,11 +202,7 @@ class ListTileBackground extends StatelessWidget {
   ///
   /// See also:
   ///
-  ///  * [highlightShape], the shape of the focus, hover, and pressed
-  ///    highlights.
   ///  * [hoverColor], the color of the hover highlight.
-  ///  * [splashColor], the color of the splash.
-  ///  * [splashFactory], which defines the appearance of the splash.
   final Color focusColor;
 
   /// The color of the ink response when a pointer is hovering over it. If this
@@ -238,12 +211,8 @@ class ListTileBackground extends StatelessWidget {
   ///
   /// See also:
   ///
-  ///  * [highlightShape], the shape of the focus, hover, and pressed
-  ///    highlights.
   ///  * [pressColor], the color of the pressed highlight.
   ///  * [focusColor], the color of the focus highlight.
-  ///  * [splashColor], the color of the splash.
-  ///  * [splashFactory], which defines the appearance of the splash.
   final Color hoverColor;
 
   /// The highlight color of the ink response when pressed. If this property is
@@ -254,10 +223,6 @@ class ListTileBackground extends StatelessWidget {
   ///
   ///  * [hoverColor], the color of the hover highlight.
   ///  * [focusColor], the color of the focus highlight.
-  ///  * [highlightShape], the shape of the focus, hover, and pressed
-  ///    highlights.
-  ///  * [splashColor], the color of the splash.
-  ///  * [splashFactory], which defines the appearance of the splash.
   final Color pressColor;
 
   /// Whether to exclude the gestures introduced by this widget from the
@@ -309,7 +274,6 @@ class ListTileBackground extends StatelessWidget {
       onHighlightChanged: onHighlightChanged,
       onHover: onHover,
       mouseCursor: mouseCursor,
-      highlightShape: highlightShape,
       radius: radius,
       borderRadius: borderRadius,
       customBorder: customBorder,
@@ -351,7 +315,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.onHighlightChanged,
     this.onHover,
     this.mouseCursor = MouseCursor.defer,
-    this.highlightShape = BoxShape.circle,
     this.radius,
     this.borderRadius,
     this.customBorder,
@@ -365,8 +328,7 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.autofocus = false,
     this.getRectCallback,
     this.debugCheckContext,
-  })  : assert(highlightShape != null),
-        assert(excludeFromSemantics != null),
+  })  : assert(excludeFromSemantics != null),
         assert(autofocus != null),
         assert(canRequestFocus != null),
         assert(mouseCursor != null);
@@ -380,7 +342,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
   final ValueChanged<bool> onHighlightChanged;
   final ValueChanged<bool> onHover;
   final MouseCursor mouseCursor;
-  final BoxShape highlightShape;
   final double radius;
   final BorderRadius borderRadius;
   final ShapeBorder customBorder;
@@ -412,11 +373,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
         .add(IterableProperty<String>('gestures', gestures, ifEmpty: '<none>'));
     properties.add(DiagnosticsProperty<MouseCursor>('mouseCursor', mouseCursor,
         defaultValue: MouseCursor.defer));
-    properties.add(DiagnosticsProperty<BoxShape>(
-      'highlightShape',
-      highlightShape,
-      showName: false,
-    ));
   }
 }
 
