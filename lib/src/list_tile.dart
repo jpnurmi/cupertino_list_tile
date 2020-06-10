@@ -15,8 +15,7 @@ import 'package:flutter/material.dart'
         Divider,
         MaterialState,
         MaterialStateMouseCursor,
-        MaterialStateProperty,
-        kThemeChangeDuration;
+        MaterialStateProperty;
 export 'package:flutter/material.dart' show ListTileTheme;
 
 import 'list_tile_background.dart';
@@ -725,9 +724,8 @@ class ListTile extends StatelessWidget {
     }
 
     final TextStyle titleStyle = _titleTextStyle(context, theme, tileTheme);
-    final Widget titleText = AnimatedDefaultTextStyle(
+    final Widget titleText = DefaultTextStyle(
       style: titleStyle,
-      duration: kThemeChangeDuration,
       child: title ?? const SizedBox(),
     );
 
@@ -735,9 +733,8 @@ class ListTile extends StatelessWidget {
     TextStyle subtitleStyle;
     if (subtitle != null) {
       subtitleStyle = _subtitleTextStyle(context, theme, tileTheme);
-      subtitleText = AnimatedDefaultTextStyle(
+      subtitleText = DefaultTextStyle(
         style: subtitleStyle,
-        duration: kThemeChangeDuration,
         child: subtitle,
       );
     }
