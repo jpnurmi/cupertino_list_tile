@@ -5,8 +5,9 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide ListTile, ListTileTheme;
+import 'package:flutter/material.dart' show CircleAvatar;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,7 +29,7 @@ class TestIconState extends State<TestIcon> {
   @override
   Widget build(BuildContext context) {
     iconTheme = IconTheme.of(context);
-    return const Icon(Icons.add);
+    return const Icon(CupertinoIcons.add);
   }
 }
 
@@ -69,26 +70,23 @@ void main() {
         double subtitleScaleFactor}) {
       hasSubtitle = isTwoLine || isThreeLine;
       subtitleScaleFactor ??= textScaleFactor;
-      return MaterialApp(
+      return CupertinoApp(
         home: MediaQuery(
           data: MediaQueryData(
             padding:
                 const EdgeInsets.only(left: leftPadding, right: rightPadding),
             textScaleFactor: textScaleFactor,
           ),
-          child: Material(
-            child: Center(
-              child: CupertinoListTile(
-                leading: Container(key: leadingKey, width: 24.0, height: 24.0),
-                title: const Text('title'),
-                subtitle: hasSubtitle
-                    ? Text('subtitle', textScaleFactor: subtitleScaleFactor)
-                    : null,
-                trailing:
-                    Container(key: trailingKey, width: 24.0, height: 24.0),
-                dense: dense,
-                isThreeLine: isThreeLine,
-              ),
+          child: Center(
+            child: CupertinoListTile(
+              leading: Container(key: leadingKey, width: 24.0, height: 24.0),
+              title: const Text('title'),
+              subtitle: hasSubtitle
+                  ? Text('subtitle', textScaleFactor: subtitleScaleFactor)
+                  : null,
+              trailing: Container(key: trailingKey, width: 24.0, height: 24.0),
+              dense: dense,
+              isThreeLine: isThreeLine,
             ),
           ),
         ),
@@ -172,17 +170,17 @@ void main() {
     await tester.pumpWidget(buildFrame(textScaleFactor: 4.0));
     testChildren();
     testHorizontalGeometry();
-    testVerticalGeometry(72.0);
+    testVerticalGeometry(76.0);
 
     await tester.pumpWidget(buildFrame(dense: true, textScaleFactor: 4.0));
     testChildren();
     testHorizontalGeometry();
-    testVerticalGeometry(72.0);
+    testVerticalGeometry(60.0);
 
     await tester.pumpWidget(buildFrame(isTwoLine: true, textScaleFactor: 4.0));
     testChildren();
     testHorizontalGeometry();
-    testVerticalGeometry(128.0);
+    testVerticalGeometry(116.0);
 
     // Make sure that the height of a large subtitle is taken into account.
     await tester.pumpWidget(buildFrame(
@@ -195,19 +193,19 @@ void main() {
         buildFrame(isTwoLine: true, dense: true, textScaleFactor: 4.0));
     testChildren();
     testHorizontalGeometry();
-    testVerticalGeometry(128.0);
+    testVerticalGeometry(108.0);
 
     await tester
         .pumpWidget(buildFrame(isThreeLine: true, textScaleFactor: 4.0));
     testChildren();
     testHorizontalGeometry();
-    testVerticalGeometry(128.0);
+    testVerticalGeometry(116.0);
 
     await tester.pumpWidget(
         buildFrame(isThreeLine: true, dense: true, textScaleFactor: 4.0));
     testChildren();
     testHorizontalGeometry();
-    testVerticalGeometry(128.0);
+    testVerticalGeometry(108.0);
   });
 
   testWidgets('ListTile geometry (RTL)', (WidgetTester tester) async {
@@ -219,13 +217,11 @@ void main() {
       ),
       child: Directionality(
         textDirection: TextDirection.rtl,
-        child: Material(
-          child: Center(
-            child: CupertinoListTile(
-              leading: Text('L'),
-              title: Text('title'),
-              trailing: Text('T'),
-            ),
+        child: Center(
+          child: CupertinoListTile(
+            leading: Text('L'),
+            title: Text('title'),
+            trailing: Text('T'),
           ),
         ),
       ),
@@ -246,19 +242,17 @@ void main() {
   testWidgets('ListTile.divideTiles', (WidgetTester tester) async {
     final List<String> titles = <String>['first', 'second', 'third'];
 
-    await tester.pumpWidget(MaterialApp(
-      home: Material(
-        child: Builder(
-          builder: (BuildContext context) {
-            return ListView(
-              children: CupertinoListTile.divideTiles(
-                context: context,
-                tiles: titles.map<Widget>(
-                    (String title) => CupertinoListTile(title: Text(title))),
-              ).toList(),
-            );
-          },
-        ),
+    await tester.pumpWidget(CupertinoApp(
+      home: Builder(
+        builder: (BuildContext context) {
+          return ListView(
+            children: CupertinoListTile.divideTiles(
+              context: context,
+              tiles: titles.map<Widget>(
+                  (String title) => CupertinoListTile(title: Text(title))),
+            ).toList(),
+          );
+        },
       ),
     ));
 
@@ -272,7 +266,8 @@ void main() {
     final Key subtitleKey = UniqueKey();
     final Key leadingKey = UniqueKey();
     final Key trailingKey = UniqueKey();
-    ThemeData theme;
+    CupertinoThemeData theme;
+    Color disabledColor;
 
     Widget buildFrame({
       bool enabled = true,
@@ -282,26 +277,26 @@ void main() {
       Color iconColor,
       Color textColor,
     }) {
-      return MaterialApp(
-        home: Material(
-          child: Center(
-            child: ListTileTheme(
-              dense: dense,
-              selectedColor: selectedColor,
-              iconColor: iconColor,
-              textColor: textColor,
-              child: Builder(builder: (BuildContext context) {
-                theme = Theme.of(context);
-                return CupertinoListTile(
-                  enabled: enabled,
-                  selected: selected,
-                  leading: TestIcon(key: leadingKey),
-                  trailing: TestIcon(key: trailingKey),
-                  title: TestText('title', key: titleKey),
-                  subtitle: TestText('subtitle', key: subtitleKey),
-                );
-              }),
-            ),
+      return CupertinoApp(
+        home: Center(
+          child: ListTileTheme(
+            dense: dense,
+            selectedColor: selectedColor,
+            iconColor: iconColor,
+            textColor: textColor,
+            child: Builder(builder: (BuildContext context) {
+              theme = CupertinoTheme.of(context);
+              disabledColor = CupertinoDynamicColor.resolve(
+                  CupertinoColors.placeholderText, context);
+              return CupertinoListTile(
+                enabled: enabled,
+                selected: selected,
+                leading: TestIcon(key: leadingKey),
+                trailing: TestIcon(key: trailingKey),
+                title: TestText('title', key: titleKey),
+                subtitle: TestText('subtitle', key: subtitleKey),
+              );
+            }),
           ),
         ),
       );
@@ -347,50 +342,48 @@ void main() {
     await tester.pumpWidget(buildFrame(enabled: false));
     await tester.pump(
         const Duration(milliseconds: 300)); // DefaultTextStyle changes animate
-    expect(iconColor(leadingKey), theme.disabledColor);
-    expect(iconColor(trailingKey), theme.disabledColor);
-    expect(textColor(titleKey), theme.disabledColor);
-    expect(textColor(subtitleKey), theme.disabledColor);
+    expect(iconColor(leadingKey), disabledColor);
+    expect(iconColor(trailingKey), disabledColor);
+    expect(textColor(titleKey), disabledColor);
+    expect(textColor(subtitleKey), disabledColor);
 
     // If the item is disabled it's rendered with the theme's disabled color.
     // Even if it's selected.
     await tester.pumpWidget(buildFrame(enabled: false, selected: true));
     await tester.pump(
         const Duration(milliseconds: 300)); // DefaultTextStyle changes animate
-    expect(iconColor(leadingKey), theme.disabledColor);
-    expect(iconColor(trailingKey), theme.disabledColor);
-    expect(textColor(titleKey), theme.disabledColor);
-    expect(textColor(subtitleKey), theme.disabledColor);
+    expect(iconColor(leadingKey), disabledColor);
+    expect(iconColor(trailingKey), disabledColor);
+    expect(textColor(titleKey), disabledColor);
+    expect(textColor(subtitleKey), disabledColor);
   });
 
   testWidgets('ListTile semantics', (WidgetTester tester) async {
     final SemanticsTester semantics = SemanticsTester(tester);
 
     await tester.pumpWidget(
-      Material(
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: MediaQuery(
-            data: const MediaQueryData(),
-            child: Column(
-              children: <Widget>[
-                const CupertinoListTile(
-                  title: Text('one'),
-                ),
-                CupertinoListTile(
-                  title: const Text('two'),
-                  onTap: () {},
-                ),
-                const CupertinoListTile(
-                  title: Text('three'),
-                  selected: true,
-                ),
-                const CupertinoListTile(
-                  title: Text('four'),
-                  enabled: false,
-                ),
-              ],
-            ),
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: MediaQuery(
+          data: const MediaQueryData(),
+          child: Column(
+            children: <Widget>[
+              const CupertinoListTile(
+                title: Text('one'),
+              ),
+              CupertinoListTile(
+                title: const Text('two'),
+                onTap: () {},
+              ),
+              const CupertinoListTile(
+                title: Text('three'),
+                selected: true,
+              ),
+              const CupertinoListTile(
+                title: Text('four'),
+                enabled: false,
+              ),
+            ],
           ),
         ),
       ),
@@ -451,20 +444,18 @@ void main() {
         ),
         child: Directionality(
           textDirection: textDirection,
-          child: Material(
-            child: Container(
-              alignment: Alignment.topLeft,
-              child: const CupertinoListTile(
-                contentPadding: EdgeInsetsDirectional.only(
-                  start: 10.0,
-                  end: 20.0,
-                  top: 30.0,
-                  bottom: 40.0,
-                ),
-                leading: Text('L'),
-                title: Text('title'),
-                trailing: Text('T'),
+          child: Container(
+            alignment: Alignment.topLeft,
+            child: const CupertinoListTile(
+              contentPadding: EdgeInsetsDirectional.only(
+                start: 10.0,
+                end: 20.0,
+                top: 30.0,
+                bottom: 40.0,
               ),
+              leading: Text('L'),
+              title: Text('title'),
+              trailing: Text('T'),
             ),
           ),
         ),
@@ -498,20 +489,18 @@ void main() {
         ),
         child: Directionality(
           textDirection: textDirection,
-          child: Material(
-            child: Container(
-              alignment: Alignment.topLeft,
-              child: const CupertinoListTile(
-                contentPadding: EdgeInsetsDirectional.only(
-                  start: 10.0,
-                  end: 20.0,
-                  top: 30.0,
-                  bottom: 40.0,
-                ),
-                leading: Text('L'),
-                title: Text('title'),
-                trailing: Text('T'),
+          child: Container(
+            alignment: Alignment.topLeft,
+            child: const CupertinoListTile(
+              contentPadding: EdgeInsetsDirectional.only(
+                start: 10.0,
+                end: 20.0,
+                top: 30.0,
+                bottom: 40.0,
               ),
+              leading: Text('L'),
+              title: Text('title'),
+              trailing: Text('T'),
             ),
           ),
         ),
@@ -547,16 +536,14 @@ void main() {
         ),
         child: Directionality(
           textDirection: textDirection,
-          child: Material(
-            child: Container(
-              alignment: Alignment.topLeft,
-              child: CupertinoListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: SizedBox(
-                    key: leadingKey, width: leadingWidth, height: 32.0),
-                title: const Text('title'),
-                subtitle: const Text('subtitle'),
-              ),
+          child: Container(
+            alignment: Alignment.topLeft,
+            child: CupertinoListTile(
+              contentPadding: EdgeInsets.zero,
+              leading:
+                  SizedBox(key: leadingKey, width: leadingWidth, height: 32.0),
+              title: const Text('title'),
+              subtitle: const Text('subtitle'),
             ),
           ),
         ),
@@ -622,26 +609,24 @@ void main() {
 
     // DENSE "ONE"-LINE
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                dense: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                dense: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              dense: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              dense: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+            ),
+          ],
         ),
       ),
     );
@@ -661,24 +646,22 @@ void main() {
 
     // NON-DENSE "ONE"-LINE
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+            ),
+          ],
         ),
       ),
     );
@@ -686,204 +669,194 @@ void main() {
         seconds: 2)); // the text styles are animated when we change dense
     //                                                                          LEFT                 TOP                   WIDTH  HEIGHT
     expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
-        const Rect.fromLTWH(0.0, 0.0, 800.0, 216.0));
+        const Rect.fromLTWH(0.0, 0.0, 800.0, 229.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
     expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
-        const Rect.fromLTWH(0.0, 216.0, 800.0, 56.0));
+        const Rect.fromLTWH(0.0, 229.0, 800.0, 56.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
-        const Rect.fromLTWH(16.0, 216.0 + 8.0, 40.0, 40.0));
+        const Rect.fromLTWH(16.0, 229.0 + 8.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
-        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 216.0 + 16.0, 24.0, 24.0));
+        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 229.0 + 16.0, 24.0, 24.0));
 
     // DENSE "TWO"-LINE
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                dense: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                dense: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              dense: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              dense: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A'),
+            ),
+          ],
         ),
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
     expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
-        const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
+        const Rect.fromLTWH(0.0, 0.0, 800.0, 177.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
     expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
-        const Rect.fromLTWH(0.0, 180.0, 800.0, 64.0));
+        const Rect.fromLTWH(0.0, 177.0, 800.0, 64.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
-        const Rect.fromLTWH(16.0, 180.0 + 12.0, 40.0, 40.0));
+        const Rect.fromLTWH(16.0, 177.0 + 12.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
-        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 180.0 + 20.0, 24.0, 24.0));
+        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 177.0 + 20.0, 24.0, 24.0));
 
     // NON-DENSE "TWO"-LINE
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A'),
+            ),
+          ],
         ),
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
     expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
-        const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
+        const Rect.fromLTWH(0.0, 0.0, 800.0, 155.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
     expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
-        const Rect.fromLTWH(0.0, 180.0, 800.0, 72.0));
+        const Rect.fromLTWH(0.0, 155.0, 800.0, 72.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
-        const Rect.fromLTWH(16.0, 180.0 + 16.0, 40.0, 40.0));
+        const Rect.fromLTWH(16.0, 155.0 + 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
-        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 180.0 + 24.0, 24.0, 24.0));
+        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 155.0 + 24.0, 24.0, 24.0));
 
     // DENSE "THREE"-LINE
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                dense: true,
-                isThreeLine: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                dense: true,
-                isThreeLine: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              dense: true,
+              isThreeLine: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              dense: true,
+              isThreeLine: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A'),
+            ),
+          ],
         ),
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
     expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
-        const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
+        const Rect.fromLTWH(0.0, 0.0, 800.0, 177.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
     expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
-        const Rect.fromLTWH(0.0, 180.0, 800.0, 76.0));
+        const Rect.fromLTWH(0.0, 177.0, 800.0, 76.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
-        const Rect.fromLTWH(16.0, 180.0 + 16.0, 40.0, 40.0));
+        const Rect.fromLTWH(16.0, 177.0 + 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
-        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 180.0 + 16.0, 24.0, 24.0));
+        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 177.0 + 16.0, 24.0, 24.0));
 
     // NON-DENSE THREE-LINE
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                isThreeLine: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                isThreeLine: true,
-                leading: CircleAvatar(),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-                subtitle: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              isThreeLine: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              isThreeLine: true,
+              leading: CircleAvatar(),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+              subtitle: Text('A'),
+            ),
+          ],
         ),
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
     expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
-        const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
+        const Rect.fromLTWH(0.0, 0.0, 800.0, 155.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
     expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
-        const Rect.fromLTWH(0.0, 180.0, 800.0, 88.0));
+        const Rect.fromLTWH(0.0, 155.0, 800.0, 88.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
-        const Rect.fromLTWH(16.0, 180.0 + 16.0, 40.0, 40.0));
+        const Rect.fromLTWH(16.0, 155.0 + 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
-        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 180.0 + 16.0, 24.0, 24.0));
+        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 155.0 + 16.0, 24.0, 24.0));
 
     // "ONE-LINE" with Small Leading Widget
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading:
-                    SizedBox(height: 12.0, width: 24.0, child: Placeholder()),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
-              ),
-              CupertinoListTile(
-                leading:
-                    SizedBox(height: 12.0, width: 24.0, child: Placeholder()),
-                trailing:
-                    SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
-                title: Text('A'),
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading:
+                  SizedBox(height: 12.0, width: 24.0, child: Placeholder()),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
+            ),
+            CupertinoListTile(
+              leading:
+                  SizedBox(height: 12.0, width: 24.0, child: Placeholder()),
+              trailing:
+                  SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
+              title: Text('A'),
+            ),
+          ],
         ),
       ),
     );
@@ -891,17 +864,17 @@ void main() {
         seconds: 2)); // the text styles are animated when we change dense
     //                                                                          LEFT                 TOP           WIDTH  HEIGHT
     expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
-        const Rect.fromLTWH(0.0, 0.0, 800.0, 216.0));
+        const Rect.fromLTWH(0.0, 0.0, 800.0, 229.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 24.0, 12.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
     expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
-        const Rect.fromLTWH(0.0, 216.0, 800.0, 56.0));
+        const Rect.fromLTWH(0.0, 229.0, 800.0, 56.0));
     expect(tester.getRect(find.byType(Placeholder).at(2)),
-        const Rect.fromLTWH(16.0, 216.0 + 16.0, 24.0, 12.0));
+        const Rect.fromLTWH(16.0, 229.0 + 16.0, 24.0, 12.0));
     expect(tester.getRect(find.byType(Placeholder).at(3)),
-        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 216.0 + 16.0, 24.0, 24.0));
+        const Rect.fromLTWH(800.0 - 24.0 - 16.0, 229.0 + 16.0, 24.0, 24.0));
   });
 
   testWidgets('ListTile leading icon height does not exceed ListTile height',
@@ -912,22 +885,20 @@ void main() {
 
     // Dense One line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('A'),
-                dense: true,
-              ),
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('B'),
-                dense: true,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('A'),
+              dense: true,
+            ),
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('B'),
+              dense: true,
+            ),
+          ],
         ),
       ),
     );
@@ -939,22 +910,20 @@ void main() {
 
     // Non-dense One line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('A'),
-                dense: false,
-              ),
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('B'),
-                dense: false,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('A'),
+              dense: false,
+            ),
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('B'),
+              dense: false,
+            ),
+          ],
         ),
       ),
     );
@@ -966,24 +935,22 @@ void main() {
 
     // Dense Two line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                dense: true,
-              ),
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                dense: true,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              dense: true,
+            ),
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              dense: true,
+            ),
+          ],
         ),
       ),
     );
@@ -995,24 +962,22 @@ void main() {
 
     // Non-dense Two line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                dense: false,
-              ),
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                dense: false,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              dense: false,
+            ),
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              dense: false,
+            ),
+          ],
         ),
       ),
     );
@@ -1024,26 +989,24 @@ void main() {
 
     // Dense Three line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                isThreeLine: true,
-                dense: true,
-              ),
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                isThreeLine: true,
-                dense: true,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              isThreeLine: true,
+              dense: true,
+            ),
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              isThreeLine: true,
+              dense: true,
+            ),
+          ],
         ),
       ),
     );
@@ -1055,26 +1018,24 @@ void main() {
 
     // Non-dense Three line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                isThreeLine: true,
-                dense: false,
-              ),
-              CupertinoListTile(
-                leading: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                isThreeLine: true,
-                dense: false,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              isThreeLine: true,
+              dense: false,
+            ),
+            CupertinoListTile(
+              leading: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              isThreeLine: true,
+              dense: false,
+            ),
+          ],
         ),
       ),
     );
@@ -1093,22 +1054,20 @@ void main() {
 
     // Dense One line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('A'),
-                dense: true,
-              ),
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('B'),
-                dense: true,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('A'),
+              dense: true,
+            ),
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('B'),
+              dense: true,
+            ),
+          ],
         ),
       ),
     );
@@ -1120,22 +1079,20 @@ void main() {
 
     // Non-dense One line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('A'),
-                dense: false,
-              ),
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('B'),
-                dense: false,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('A'),
+              dense: false,
+            ),
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('B'),
+              dense: false,
+            ),
+          ],
         ),
       ),
     );
@@ -1147,24 +1104,22 @@ void main() {
 
     // Dense Two line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                dense: true,
-              ),
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                dense: true,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              dense: true,
+            ),
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              dense: true,
+            ),
+          ],
         ),
       ),
     );
@@ -1176,24 +1131,22 @@ void main() {
 
     // Non-dense Two line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                dense: false,
-              ),
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                dense: false,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              dense: false,
+            ),
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              dense: false,
+            ),
+          ],
         ),
       ),
     );
@@ -1205,26 +1158,24 @@ void main() {
 
     // Dense Three line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                isThreeLine: true,
-                dense: true,
-              ),
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                isThreeLine: true,
-                dense: true,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              isThreeLine: true,
+              dense: true,
+            ),
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              isThreeLine: true,
+              dense: true,
+            ),
+          ],
         ),
       ),
     );
@@ -1236,26 +1187,24 @@ void main() {
 
     // Non-dense Three line
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: const <Widget>[
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('A'),
-                subtitle: Text('A'),
-                isThreeLine: true,
-                dense: false,
-              ),
-              CupertinoListTile(
-                trailing: oversizedWidget,
-                title: Text('B'),
-                subtitle: Text('B'),
-                isThreeLine: true,
-                dense: false,
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: const <Widget>[
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('A'),
+              subtitle: Text('A'),
+              isThreeLine: true,
+              dense: false,
+            ),
+            CupertinoListTile(
+              trailing: oversizedWidget,
+              title: Text('B'),
+              subtitle: Text('B'),
+              isThreeLine: true,
+              dense: false,
+            ),
+          ],
         ),
       ),
     );
@@ -1271,18 +1220,16 @@ void main() {
     final GlobalKey childKey = GlobalKey();
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: <Widget>[
-              CupertinoListTile(
-                title: Text('A', key: childKey),
-                dense: true,
-                enabled: true,
-                onTap: () {},
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: <Widget>[
+            CupertinoListTile(
+              title: Text('A', key: childKey),
+              dense: true,
+              enabled: true,
+              onTap: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -1296,18 +1243,16 @@ void main() {
 
     expect(tileNode.hasPrimaryFocus, isTrue);
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: <Widget>[
-              CupertinoListTile(
-                title: Text('A', key: childKey),
-                dense: true,
-                enabled: false,
-                onTap: () {},
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: <Widget>[
+            CupertinoListTile(
+              title: Text('A', key: childKey),
+              dense: true,
+              enabled: false,
+              onTap: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -1322,19 +1267,17 @@ void main() {
     final GlobalKey childKey = GlobalKey();
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: <Widget>[
-              CupertinoListTile(
-                title: Text('A', key: childKey),
-                dense: true,
-                enabled: true,
-                autofocus: true,
-                onTap: () {},
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: <Widget>[
+            CupertinoListTile(
+              title: Text('A', key: childKey),
+              dense: true,
+              enabled: true,
+              autofocus: true,
+              onTap: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -1344,19 +1287,17 @@ void main() {
         isTrue);
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: ListView(
-            children: <Widget>[
-              CupertinoListTile(
-                title: Text('A', key: childKey),
-                dense: true,
-                enabled: false,
-                autofocus: true,
-                onTap: () {},
-              ),
-            ],
-          ),
+      CupertinoApp(
+        home: ListView(
+          children: <Widget>[
+            CupertinoListTile(
+              title: Text('A', key: childKey),
+              dense: true,
+              enabled: false,
+              autofocus: true,
+              onTap: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -1373,24 +1314,22 @@ void main() {
         FocusHighlightStrategy.alwaysTraditional;
     const Key tileKey = Key('listTile');
     Widget buildApp({bool enabled = true}) {
-      return MaterialApp(
-        home: Material(
-          child: Center(
-            child: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-              return SizedBox(
-                width: 100,
-                height: 100,
-                child: CupertinoListTile(
-                  key: tileKey,
-                  onTap: enabled ? () {} : null,
-                  focusColor: Colors.orange[500],
-                  autofocus: true,
-                  focusNode: focusNode,
-                ),
-              );
-            }),
-          ),
+      return CupertinoApp(
+        home: Center(
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return SizedBox(
+              width: 100,
+              height: 100,
+              child: CupertinoListTile(
+                key: tileKey,
+                onTap: enabled ? () {} : null,
+                focusColor: CupertinoColors.systemOrange.color,
+                autofocus: true,
+                focusNode: focusNode,
+              ),
+            );
+          }),
         ),
       );
     }
@@ -1403,7 +1342,7 @@ void main() {
       find.byType(Container),
       paints
         ..rect(
-          color: Colors.orange[500],
+          color: CupertinoColors.systemOrange.color,
           rect: const Rect.fromLTWH(0, 0, 100, 100),
         ),
     );
@@ -1421,23 +1360,21 @@ void main() {
         FocusHighlightStrategy.alwaysTraditional;
     const Key tileKey = Key('ListTile');
     Widget buildApp({bool enabled = true}) {
-      return MaterialApp(
-        home: Material(
-          child: Center(
-            child: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-              return SizedBox(
-                width: 100,
-                height: 100,
-                child: CupertinoListTile(
-                  key: tileKey,
-                  onTap: enabled ? () {} : null,
-                  hoverColor: Colors.orange[500],
-                  autofocus: true,
-                ),
-              );
-            }),
-          ),
+      return CupertinoApp(
+        home: Center(
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return SizedBox(
+              width: 100,
+              height: 100,
+              child: CupertinoListTile(
+                key: tileKey,
+                onTap: enabled ? () {} : null,
+                hoverColor: CupertinoColors.systemOrange.color,
+                autofocus: true,
+              ),
+            );
+          }),
         ),
       );
     }
@@ -1461,7 +1398,7 @@ void main() {
       find.byType(Container),
       paints
         ..rect(
-            color: Colors.orange[500],
+            color: CupertinoColors.systemOrange.color,
             rect: const Rect.fromLTWH(0, 0, 100, 100)),
     );
 
@@ -1478,30 +1415,28 @@ void main() {
     const Key tileKey = Key('ListTile');
     bool tapped = false;
     Widget buildApp({bool enabled = true}) {
-      return MaterialApp(
-        home: Material(
-          child: Center(
-            child: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                width: 200,
-                height: 100,
-                color: Colors.white,
-                child: CupertinoListTile(
-                  key: tileKey,
-                  onTap: enabled
-                      ? () {
-                          setState(() {
-                            tapped = true;
-                          });
-                        }
-                      : null,
-                  hoverColor: Colors.orange[500],
-                  autofocus: true,
-                ),
-              );
-            }),
-          ),
+      return CupertinoApp(
+        home: Center(
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              width: 200,
+              height: 100,
+              color: CupertinoColors.white,
+              child: CupertinoListTile(
+                key: tileKey,
+                onTap: enabled
+                    ? () {
+                        setState(() {
+                          tapped = true;
+                        });
+                      }
+                    : null,
+                hoverColor: CupertinoColors.systemOrange.color,
+                autofocus: true,
+              ),
+            );
+          }),
         ),
       );
     }
@@ -1519,15 +1454,13 @@ void main() {
       (WidgetTester tester) async {
     // Test ListTile() constructor
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: Center(
-            child: MouseRegion(
-              cursor: SystemMouseCursors.forbidden,
-              child: CupertinoListTile(
-                onTap: () {},
-                mouseCursor: SystemMouseCursors.text,
-              ),
+      CupertinoApp(
+        home: Center(
+          child: MouseRegion(
+            cursor: SystemMouseCursors.forbidden,
+            child: CupertinoListTile(
+              onTap: () {},
+              mouseCursor: SystemMouseCursors.text,
             ),
           ),
         ),
@@ -1547,14 +1480,12 @@ void main() {
 
     // Test default cursor
     await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: Center(
-            child: MouseRegion(
-              cursor: SystemMouseCursors.forbidden,
-              child: CupertinoListTile(
-                onTap: () {},
-              ),
+      CupertinoApp(
+        home: Center(
+          child: MouseRegion(
+            cursor: SystemMouseCursors.forbidden,
+            child: CupertinoListTile(
+              onTap: () {},
             ),
           ),
         ),
@@ -1566,14 +1497,12 @@ void main() {
 
     // Test default cursor when disabled
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Material(
-          child: Center(
-            child: MouseRegion(
-              cursor: SystemMouseCursors.forbidden,
-              child: CupertinoListTile(
-                enabled: false,
-              ),
+      const CupertinoApp(
+        home: Center(
+          child: MouseRegion(
+            cursor: SystemMouseCursors.forbidden,
+            child: CupertinoListTile(
+              enabled: false,
             ),
           ),
         ),
