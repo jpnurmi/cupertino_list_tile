@@ -1327,6 +1327,7 @@ void main() {
                 focusColor: CupertinoColors.systemOrange.color,
                 autofocus: true,
                 focusNode: focusNode,
+                trailing: SizedBox.shrink(),
               ),
             );
           }),
@@ -1371,6 +1372,7 @@ void main() {
                 key: tileKey,
                 onTap: enabled ? () {} : null,
                 hoverColor: CupertinoColors.systemOrange.color,
+                trailing: SizedBox.shrink(),
                 autofocus: true,
               ),
             );

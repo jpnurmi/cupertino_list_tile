@@ -745,6 +745,10 @@ class CupertinoListTile extends StatelessWidget {
         data: iconThemeData,
         child: trailing,
       );
+    } else {
+      trailingIcon = Icon(CupertinoIcons.right_chevron,
+          color: CupertinoDynamicColor.resolve(
+              CupertinoColors.separator, context));
     }
 
     const EdgeInsets _defaultContentPadding =
