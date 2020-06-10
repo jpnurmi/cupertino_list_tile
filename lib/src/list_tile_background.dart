@@ -109,7 +109,6 @@ class ListTileBackground extends StatelessWidget {
     this.onHighlightChanged,
     this.onHover,
     this.mouseCursor = MouseCursor.defer,
-    this.radius,
     this.borderRadius,
     this.customBorder,
     this.focusColor,
@@ -174,18 +173,6 @@ class ListTileBackground extends StatelessWidget {
   /// The [cursor] defaults to [MouseCursor.defer], deferring the choice of
   /// cursor to the next region behing it in hit-test order.
   final MouseCursor mouseCursor;
-
-  /// The radius of the ink splash.
-  ///
-  /// Splashes grow up to this size. By default, this size is determined from
-  /// the size of the rectangle provided by [getRectCallback], or the size of
-  /// the [ListTileBackground] itself.
-  ///
-  /// See also:
-  ///
-  ///  * [splashColor], the color of the splash.
-  ///  * [splashFactory], which defines the appearance of the splash.
-  final double radius;
 
   /// The clipping radius of the containing rect. This is effective only if
   /// [customBorder] is null.
@@ -274,7 +261,6 @@ class ListTileBackground extends StatelessWidget {
       onHighlightChanged: onHighlightChanged,
       onHover: onHover,
       mouseCursor: mouseCursor,
-      radius: radius,
       borderRadius: borderRadius,
       customBorder: customBorder,
       focusColor: focusColor,
@@ -315,7 +301,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.onHighlightChanged,
     this.onHover,
     this.mouseCursor = MouseCursor.defer,
-    this.radius,
     this.borderRadius,
     this.customBorder,
     this.focusColor,
@@ -342,7 +327,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
   final ValueChanged<bool> onHighlightChanged;
   final ValueChanged<bool> onHover;
   final MouseCursor mouseCursor;
-  final double radius;
   final BorderRadius borderRadius;
   final ShapeBorder customBorder;
   final Color focusColor;
