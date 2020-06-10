@@ -12,7 +12,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart'
     show
         ListTileTheme,
-        Divider,
         MaterialState,
         MaterialStateMouseCursor,
         MaterialStateProperty;
@@ -634,7 +633,7 @@ class CupertinoListTile extends StatelessWidget {
 
     final Decoration decoration = BoxDecoration(
       border: Border(
-        bottom: Divider.createBorderSide(context, color: color),
+        bottom: BorderSide(color: color),
       ),
     );
 
@@ -768,6 +767,12 @@ class CupertinoListTile extends StatelessWidget {
       },
     );
 
+    final ShapeBorder border = Border(
+      bottom: BorderSide(
+          color: CupertinoDynamicColor.resolve(
+              CupertinoColors.separator, context)),
+    );
+
     return ListTileBackground(
       onTap: enabled ? onTap : null,
       onLongPress: enabled ? onLongPress : null,
@@ -778,6 +783,7 @@ class CupertinoListTile extends StatelessWidget {
       focusColor: focusColor,
       hoverColor: hoverColor,
       autofocus: autofocus,
+      customBorder: border,
       child: Semantics(
         selected: selected,
         enabled: enabled,

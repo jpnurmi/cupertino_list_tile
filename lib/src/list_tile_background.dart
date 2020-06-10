@@ -588,8 +588,12 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
             behavior: HitTestBehavior.opaque,
             excludeFromSemantics: widget.excludeFromSemantics,
             child: Container(
-              color: _highlightColor,
               child: widget.child,
+              decoration: BoxDecoration(
+                color: _highlightColor,
+                border: widget.customBorder,
+                borderRadius: widget.borderRadius,
+              ),
             ),
           ),
         ),
