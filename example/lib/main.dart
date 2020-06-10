@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
             itemBuilder: (BuildContext context, int index) {
               final selected = index == selectedIndex;
               final enabled = index == 0 || index % 10 != 0;
-              return ListTile(
+              return CupertinoListTile(
                 title: Text('CupertinoListTile #$index'),
                 enabled: enabled,
                 selected: selected,

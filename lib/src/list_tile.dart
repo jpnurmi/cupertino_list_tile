@@ -56,7 +56,7 @@ import 'list_tile_background.dart';
 /// {@tool snippet}
 ///
 /// This example uses a [ListView] to demonstrate different configurations of
-/// [ListTile]s in [Card]s.
+/// [CupertinoListTile]s in [Card]s.
 ///
 /// ![Different variations of ListTile](https://flutter.github.io/assets-for-api-docs/assets/material/list_tile.png)
 ///
@@ -466,24 +466,24 @@ import 'list_tile_background.dart';
 ///
 /// See also:
 ///
-///  * [ListTileTheme], which defines visual properties for [ListTile]s.
-///  * [ListView], which can display an arbitrary number of [ListTile]s
+///  * [ListTileTheme], which defines visual properties for [CupertinoListTile]s.
+///  * [ListView], which can display an arbitrary number of [CupertinoListTile]s
 ///    in a scrolling list.
 ///  * [CircleAvatar], which shows an icon representing a person and is often
 ///    used as the [leading] element of a ListTile.
-///  * [Card], which can be used with [Column] to show a few [ListTile]s.
-///  * [Divider], which can be used to separate [ListTile]s.
-///  * [ListTile.divideTiles], a utility for inserting [Divider]s in between [ListTile]s.
+///  * [Card], which can be used with [Column] to show a few [CupertinoListTile]s.
+///  * [Divider], which can be used to separate [CupertinoListTile]s.
+///  * [CupertinoListTile.divideTiles], a utility for inserting [Divider]s in between [CupertinoListTile]s.
 ///  * [CheckboxListTile], [RadioListTile], and [SwitchListTile], widgets
 ///    that combine [ListTile] with other controls.
 ///  * <https://material.io/design/components/lists.html>
-class ListTile extends StatelessWidget {
+class CupertinoListTile extends StatelessWidget {
   /// Creates a list tile.
   ///
   /// If [isThreeLine] is true, then [subtitle] must not be null.
   ///
   /// Requires one of its ancestors to be a [Material] widget.
-  const ListTile({
+  const CupertinoListTile({
     Key key,
     this.leading,
     this.title,
@@ -560,7 +560,7 @@ class ListTile extends StatelessWidget {
 
   /// The tile's internal padding.
   ///
-  /// Insets a [ListTile]'s contents: its [leading], [title], [subtitle],
+  /// Insets a [CupertinoListTile]'s contents: its [leading], [title], [subtitle],
   /// and [trailing] widgets.
   ///
   /// If null, `EdgeInsets.symmetric(horizontal: 16.0)` is used.

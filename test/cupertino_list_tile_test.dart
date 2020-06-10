@@ -78,7 +78,7 @@ void main() {
           ),
           child: Material(
             child: Center(
-              child: ListTile(
+              child: CupertinoListTile(
                 leading: Container(key: leadingKey, width: 24.0, height: 24.0),
                 title: const Text('title'),
                 subtitle: hasSubtitle
@@ -126,7 +126,7 @@ void main() {
     }
 
     void testVerticalGeometry(double expectedHeight) {
-      final Rect tileRect = tester.getRect(find.byType(ListTile));
+      final Rect tileRect = tester.getRect(find.byType(CupertinoListTile));
       expect(tileRect.size, Size(800.0, expectedHeight));
       expect(top('title'), greaterThanOrEqualTo(tileRect.top));
       if (hasSubtitle) {
@@ -221,7 +221,7 @@ void main() {
         textDirection: TextDirection.rtl,
         child: Material(
           child: Center(
-            child: ListTile(
+            child: CupertinoListTile(
               leading: Text('L'),
               title: Text('title'),
               trailing: Text('T'),
@@ -251,10 +251,10 @@ void main() {
         child: Builder(
           builder: (BuildContext context) {
             return ListView(
-              children: ListTile.divideTiles(
+              children: CupertinoListTile.divideTiles(
                 context: context,
                 tiles: titles.map<Widget>(
-                    (String title) => ListTile(title: Text(title))),
+                    (String title) => CupertinoListTile(title: Text(title))),
               ).toList(),
             );
           },
@@ -292,7 +292,7 @@ void main() {
               textColor: textColor,
               child: Builder(builder: (BuildContext context) {
                 theme = Theme.of(context);
-                return ListTile(
+                return CupertinoListTile(
                   enabled: enabled,
                   selected: selected,
                   leading: TestIcon(key: leadingKey),
@@ -374,18 +374,18 @@ void main() {
             data: const MediaQueryData(),
             child: Column(
               children: <Widget>[
-                const ListTile(
+                const CupertinoListTile(
                   title: Text('one'),
                 ),
-                ListTile(
+                CupertinoListTile(
                   title: const Text('two'),
                   onTap: () {},
                 ),
-                const ListTile(
+                const CupertinoListTile(
                   title: Text('three'),
                   selected: true,
                 ),
-                const ListTile(
+                const CupertinoListTile(
                   title: Text('four'),
                   enabled: false,
                 ),
@@ -454,7 +454,7 @@ void main() {
           child: Material(
             child: Container(
               alignment: Alignment.topLeft,
-              child: const ListTile(
+              child: const CupertinoListTile(
                 contentPadding: EdgeInsetsDirectional.only(
                   start: 10.0,
                   end: 20.0,
@@ -476,14 +476,14 @@ void main() {
 
     await tester.pumpWidget(buildFrame(TextDirection.ltr));
 
-    expect(tester.getSize(find.byType(ListTile)),
+    expect(tester.getSize(find.byType(CupertinoListTile)),
         const Size(800.0, 126.0)); // 126 = 56 + 30 + 40
     expect(left('L'), 10.0); // contentPadding.start = 10
     expect(right('T'), 780.0); // 800 - contentPadding.end
 
     await tester.pumpWidget(buildFrame(TextDirection.rtl));
 
-    expect(tester.getSize(find.byType(ListTile)),
+    expect(tester.getSize(find.byType(CupertinoListTile)),
         const Size(800.0, 126.0)); // 126 = 56 + 30 + 40
     expect(left('T'), 20.0); // contentPadding.end = 20
     expect(right('L'), 790.0); // 800 - contentPadding.start
@@ -501,7 +501,7 @@ void main() {
           child: Material(
             child: Container(
               alignment: Alignment.topLeft,
-              child: const ListTile(
+              child: const CupertinoListTile(
                 contentPadding: EdgeInsetsDirectional.only(
                   start: 10.0,
                   end: 20.0,
@@ -523,14 +523,14 @@ void main() {
 
     await tester.pumpWidget(buildFrame(TextDirection.ltr));
 
-    expect(tester.getSize(find.byType(ListTile)),
+    expect(tester.getSize(find.byType(CupertinoListTile)),
         const Size(800.0, 126.0)); // 126 = 56 + 30 + 40
     expect(left('L'), 10.0); // contentPadding.start = 10
     expect(right('T'), 780.0); // 800 - contentPadding.end
 
     await tester.pumpWidget(buildFrame(TextDirection.rtl));
 
-    expect(tester.getSize(find.byType(ListTile)),
+    expect(tester.getSize(find.byType(CupertinoListTile)),
         const Size(800.0, 126.0)); // 126 = 56 + 30 + 40
     expect(left('T'), 20.0); // contentPadding.end = 20
     expect(right('L'), 790.0); // 800 - contentPadding.start
@@ -550,7 +550,7 @@ void main() {
           child: Material(
             child: Container(
               alignment: Alignment.topLeft,
-              child: ListTile(
+              child: CupertinoListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: SizedBox(
                     key: leadingKey, width: leadingWidth, height: 32.0),
@@ -570,7 +570,8 @@ void main() {
 
     // Two-line tile's height = 72, leading 24x32 widget is positioned 16.0 pixels from the top.
     await tester.pumpWidget(buildFrame(24.0, TextDirection.ltr));
-    expect(tester.getSize(find.byType(ListTile)), const Size(800.0, 72.0));
+    expect(tester.getSize(find.byType(CupertinoListTile)),
+        const Size(800.0, 72.0));
     expect(tester.getTopLeft(find.byKey(leadingKey)), const Offset(0.0, 16.0));
     expect(tester.getBottomRight(find.byKey(leadingKey)),
         const Offset(24.0, 16.0 + 32.0));
@@ -583,7 +584,8 @@ void main() {
     // If the leading widget is wider than 40 it is separated from the
     // title and subtitle by 16.
     await tester.pumpWidget(buildFrame(56.0, TextDirection.ltr));
-    expect(tester.getSize(find.byType(ListTile)), const Size(800.0, 72.0));
+    expect(tester.getSize(find.byType(CupertinoListTile)),
+        const Size(800.0, 72.0));
     expect(tester.getTopLeft(find.byKey(leadingKey)), const Offset(0.0, 16.0));
     expect(tester.getBottomRight(find.byKey(leadingKey)),
         const Offset(56.0, 16.0 + 32.0));
@@ -593,7 +595,8 @@ void main() {
     // Same tests, textDirection = RTL
 
     await tester.pumpWidget(buildFrame(24.0, TextDirection.rtl));
-    expect(tester.getSize(find.byType(ListTile)), const Size(800.0, 72.0));
+    expect(tester.getSize(find.byType(CupertinoListTile)),
+        const Size(800.0, 72.0));
     expect(
         tester.getTopRight(find.byKey(leadingKey)), const Offset(800.0, 16.0));
     expect(tester.getBottomLeft(find.byKey(leadingKey)),
@@ -602,7 +605,8 @@ void main() {
     expect(right('subtitle'), 800.0 - 56.0);
 
     await tester.pumpWidget(buildFrame(56.0, TextDirection.rtl));
-    expect(tester.getSize(find.byType(ListTile)), const Size(800.0, 72.0));
+    expect(tester.getSize(find.byType(CupertinoListTile)),
+        const Size(800.0, 72.0));
     expect(
         tester.getTopRight(find.byKey(leadingKey)), const Offset(800.0, 16.0));
     expect(tester.getBottomLeft(find.byKey(leadingKey)),
@@ -622,14 +626,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 dense: true,
                 leading: CircleAvatar(),
                 trailing:
                     SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
                 title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 dense: true,
                 leading: CircleAvatar(),
                 trailing:
@@ -642,13 +646,13 @@ void main() {
       ),
     );
     //                                                                          LEFT                  TOP          WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 177.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 177.0, 800.0, 48.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
         const Rect.fromLTWH(16.0, 177.0 + 4.0, 40.0, 40.0));
@@ -661,13 +665,13 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: CircleAvatar(),
                 trailing:
                     SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
                 title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: CircleAvatar(),
                 trailing:
                     SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
@@ -681,13 +685,13 @@ void main() {
     await tester.pump(const Duration(
         seconds: 2)); // the text styles are animated when we change dense
     //                                                                          LEFT                 TOP                   WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 216.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 216.0, 800.0, 56.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
         const Rect.fromLTWH(16.0, 216.0 + 8.0, 40.0, 40.0));
@@ -700,7 +704,7 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 dense: true,
                 leading: CircleAvatar(),
                 trailing:
@@ -708,7 +712,7 @@ void main() {
                 title: Text('A'),
                 subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 dense: true,
                 leading: CircleAvatar(),
                 trailing:
@@ -722,13 +726,13 @@ void main() {
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 180.0, 800.0, 64.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
         const Rect.fromLTWH(16.0, 180.0 + 12.0, 40.0, 40.0));
@@ -741,14 +745,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: CircleAvatar(),
                 trailing:
                     SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
                 title: Text('A'),
                 subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: CircleAvatar(),
                 trailing:
                     SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
@@ -761,13 +765,13 @@ void main() {
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 180.0, 800.0, 72.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
         const Rect.fromLTWH(16.0, 180.0 + 16.0, 40.0, 40.0));
@@ -780,7 +784,7 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 dense: true,
                 isThreeLine: true,
                 leading: CircleAvatar(),
@@ -789,7 +793,7 @@ void main() {
                 title: Text('A'),
                 subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 dense: true,
                 isThreeLine: true,
                 leading: CircleAvatar(),
@@ -804,13 +808,13 @@ void main() {
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 180.0, 800.0, 76.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
         const Rect.fromLTWH(16.0, 180.0 + 16.0, 40.0, 40.0));
@@ -823,7 +827,7 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 isThreeLine: true,
                 leading: CircleAvatar(),
                 trailing:
@@ -831,7 +835,7 @@ void main() {
                 title: Text('A'),
                 subtitle: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 isThreeLine: true,
                 leading: CircleAvatar(),
                 trailing:
@@ -845,13 +849,13 @@ void main() {
       ),
     );
     //                                                                          LEFT                 TOP          WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 180.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 40.0, 40.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 180.0, 800.0, 88.0));
     expect(tester.getRect(find.byType(CircleAvatar).at(1)),
         const Rect.fromLTWH(16.0, 180.0 + 16.0, 40.0, 40.0));
@@ -864,14 +868,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading:
                     SizedBox(height: 12.0, width: 24.0, child: Placeholder()),
                 trailing:
                     SizedBox(height: 24.0, width: 24.0, child: Placeholder()),
                 title: Text('A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM'),
               ),
-              ListTile(
+              CupertinoListTile(
                 leading:
                     SizedBox(height: 12.0, width: 24.0, child: Placeholder()),
                 trailing:
@@ -886,13 +890,13 @@ void main() {
     await tester.pump(const Duration(
         seconds: 2)); // the text styles are animated when we change dense
     //                                                                          LEFT                 TOP           WIDTH  HEIGHT
-    expect(tester.getRect(find.byType(ListTile).at(0)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(0)),
         const Rect.fromLTWH(0.0, 0.0, 800.0, 216.0));
     expect(tester.getRect(find.byType(Placeholder).at(0)),
         const Rect.fromLTWH(16.0, 16.0, 24.0, 12.0));
     expect(tester.getRect(find.byType(Placeholder).at(1)),
         const Rect.fromLTWH(800.0 - 24.0 - 16.0, 16.0, 24.0, 24.0));
-    expect(tester.getRect(find.byType(ListTile).at(1)),
+    expect(tester.getRect(find.byType(CupertinoListTile).at(1)),
         const Rect.fromLTWH(0.0, 216.0, 800.0, 56.0));
     expect(tester.getRect(find.byType(Placeholder).at(2)),
         const Rect.fromLTWH(16.0, 216.0 + 16.0, 24.0, 12.0));
@@ -912,12 +916,12 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('A'),
                 dense: true,
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('B'),
                 dense: true,
@@ -939,12 +943,12 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('A'),
                 dense: false,
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('B'),
                 dense: false,
@@ -966,13 +970,13 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 dense: true,
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -995,13 +999,13 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 dense: false,
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1024,14 +1028,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 isThreeLine: true,
                 dense: true,
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1055,14 +1059,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 isThreeLine: true,
                 dense: false,
               ),
-              ListTile(
+              CupertinoListTile(
                 leading: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1093,12 +1097,12 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('A'),
                 dense: true,
               ),
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('B'),
                 dense: true,
@@ -1120,12 +1124,12 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('A'),
                 dense: false,
               ),
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('B'),
                 dense: false,
@@ -1147,13 +1151,13 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 dense: true,
               ),
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1176,13 +1180,13 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 dense: false,
               ),
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1205,14 +1209,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 isThreeLine: true,
                 dense: true,
               ),
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1236,14 +1240,14 @@ void main() {
         home: Material(
           child: ListView(
             children: const <Widget>[
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('A'),
                 subtitle: Text('A'),
                 isThreeLine: true,
                 dense: false,
               ),
-              ListTile(
+              CupertinoListTile(
                 trailing: oversizedWidget,
                 title: Text('B'),
                 subtitle: Text('B'),
@@ -1271,7 +1275,7 @@ void main() {
         home: Material(
           child: ListView(
             children: <Widget>[
-              ListTile(
+              CupertinoListTile(
                 title: Text('A', key: childKey),
                 dense: true,
                 enabled: true,
@@ -1296,7 +1300,7 @@ void main() {
         home: Material(
           child: ListView(
             children: <Widget>[
-              ListTile(
+              CupertinoListTile(
                 title: Text('A', key: childKey),
                 dense: true,
                 enabled: false,
@@ -1322,7 +1326,7 @@ void main() {
         home: Material(
           child: ListView(
             children: <Widget>[
-              ListTile(
+              CupertinoListTile(
                 title: Text('A', key: childKey),
                 dense: true,
                 enabled: true,
@@ -1344,7 +1348,7 @@ void main() {
         home: Material(
           child: ListView(
             children: <Widget>[
-              ListTile(
+              CupertinoListTile(
                 title: Text('A', key: childKey),
                 dense: true,
                 enabled: false,
@@ -1377,7 +1381,7 @@ void main() {
               return SizedBox(
                 width: 100,
                 height: 100,
-                child: ListTile(
+                child: CupertinoListTile(
                   key: tileKey,
                   onTap: enabled ? () {} : null,
                   focusColor: Colors.orange[500],
@@ -1425,7 +1429,7 @@ void main() {
               return SizedBox(
                 width: 100,
                 height: 100,
-                child: ListTile(
+                child: CupertinoListTile(
                   key: tileKey,
                   onTap: enabled ? () {} : null,
                   hoverColor: Colors.orange[500],
@@ -1483,7 +1487,7 @@ void main() {
                 width: 200,
                 height: 100,
                 color: Colors.white,
-                child: ListTile(
+                child: CupertinoListTile(
                   key: tileKey,
                   onTap: enabled
                       ? () {
@@ -1520,7 +1524,7 @@ void main() {
           child: Center(
             child: MouseRegion(
               cursor: SystemMouseCursors.forbidden,
-              child: ListTile(
+              child: CupertinoListTile(
                 onTap: () {},
                 mouseCursor: SystemMouseCursors.text,
               ),
@@ -1532,7 +1536,8 @@ void main() {
 
     final TestGesture gesture =
         await tester.createGesture(kind: PointerDeviceKind.mouse, pointer: 1);
-    await gesture.addPointer(location: tester.getCenter(find.byType(ListTile)));
+    await gesture.addPointer(
+        location: tester.getCenter(find.byType(CupertinoListTile)));
     addTearDown(gesture.removePointer);
 
     await tester.pump();
@@ -1547,7 +1552,7 @@ void main() {
           child: Center(
             child: MouseRegion(
               cursor: SystemMouseCursors.forbidden,
-              child: ListTile(
+              child: CupertinoListTile(
                 onTap: () {},
               ),
             ),
@@ -1566,7 +1571,7 @@ void main() {
           child: Center(
             child: MouseRegion(
               cursor: SystemMouseCursors.forbidden,
-              child: ListTile(
+              child: CupertinoListTile(
                 enabled: false,
               ),
             ),
