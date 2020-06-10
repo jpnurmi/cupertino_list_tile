@@ -1374,10 +1374,9 @@ void main() {
           child: Center(
             child: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
-              return Container(
+              return SizedBox(
                 width: 100,
                 height: 100,
-                color: Colors.white,
                 child: ListTile(
                   key: tileKey,
                   onTap: enabled ? () {} : null,
@@ -1397,15 +1396,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(focusNode.hasPrimaryFocus, isTrue);
     expect(
-      Material.of(tester.element(find.byKey(tileKey))),
+      find.byType(Container),
       paints
         ..rect(
           color: Colors.orange[500],
-          rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0),
-        )
-        ..rect(
-          color: const Color(0xffffffff),
-          rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0),
+          rect: const Rect.fromLTWH(0, 0, 100, 100),
         ),
     );
 
@@ -1413,13 +1408,7 @@ void main() {
     await tester.pumpWidget(buildApp(enabled: false));
     await tester.pumpAndSettle();
     expect(focusNode.hasPrimaryFocus, isFalse);
-    expect(
-      Material.of(tester.element(find.byKey(tileKey))),
-      paints
-        ..rect(
-            color: const Color(0xffffffff),
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0)),
-    );
+    expect(find.byType(Container), paintsNothing);
   });
 
   testWidgets('ListTile can be hovered and has correct hover color',
@@ -1433,10 +1422,9 @@ void main() {
           child: Center(
             child: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
-              return Container(
+              return SizedBox(
                 width: 100,
                 height: 100,
-                color: Colors.white,
                 child: ListTile(
                   key: tileKey,
                   onTap: enabled ? () {} : null,
@@ -1454,16 +1442,7 @@ void main() {
 
     await tester.pump();
     await tester.pumpAndSettle();
-    expect(
-      Material.of(tester.element(find.byKey(tileKey))),
-      paints
-        ..rect(
-            color: const Color(0x1f000000),
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0))
-        ..rect(
-            color: const Color(0xffffffff),
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0)),
-    );
+    expect(find.byType(Container), paintsNothing);
 
     // Start hovering
     final TestGesture gesture =
@@ -1475,32 +1454,17 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle();
     expect(
-      Material.of(tester.element(find.byKey(tileKey))),
+      find.byType(Container),
       paints
         ..rect(
-            color: const Color(0x1f000000),
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0))
-        ..rect(
             color: Colors.orange[500],
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0))
-        ..rect(
-            color: const Color(0xffffffff),
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0)),
+            rect: const Rect.fromLTWH(0, 0, 100, 100)),
     );
 
     await tester.pumpWidget(buildApp(enabled: false));
     await tester.pump();
     await tester.pumpAndSettle();
-    expect(
-      Material.of(tester.element(find.byKey(tileKey))),
-      paints
-        ..rect(
-            color: Colors.orange[500],
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0))
-        ..rect(
-            color: const Color(0xffffffff),
-            rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0)),
-    );
+    expect(find.byType(Container), paintsNothing);
   });
 
   testWidgets('ListTile can be triggerd by keyboard shortcuts',

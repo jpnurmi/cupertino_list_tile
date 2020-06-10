@@ -10,6 +10,8 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter/material.dart';
 
+import 'list_tile_background.dart';
+
 /// Defines the title font used for [ListTile] descendants of a [ListTileTheme].
 ///
 /// List tiles that appear in a [Drawer] use the theme's [TextTheme.bodyText1]
@@ -639,6 +641,7 @@ class ListTile extends StatelessWidget {
     this.onLongPress,
     this.mouseCursor,
     this.selected = false,
+    this.pressColor,
     this.focusColor,
     this.hoverColor,
     this.focusNode,
@@ -741,6 +744,9 @@ class ListTile extends StatelessWidget {
   /// By default the selected color is the theme's primary color. The selected color
   /// can be overridden with a [ListTileTheme].
   final bool selected;
+
+  /// The color for the tile's background when it is pressed.
+  final Color pressColor;
 
   /// The color for the tile's [Material] when it has the input focus.
   final Color focusColor;
@@ -922,12 +928,13 @@ class ListTile extends StatelessWidget {
       },
     );
 
-    return InkWell(
+    return ListTileBackground(
       onTap: enabled ? onTap : null,
       onLongPress: enabled ? onLongPress : null,
       mouseCursor: effectiveMouseCursor,
       canRequestFocus: enabled,
       focusNode: focusNode,
+      pressColor: pressColor,
       focusColor: focusColor,
       hoverColor: hoverColor,
       autofocus: autofocus,

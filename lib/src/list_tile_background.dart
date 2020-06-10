@@ -116,7 +116,7 @@ class ListTileBackground extends StatelessWidget {
     this.customBorder,
     this.focusColor,
     this.hoverColor,
-    this.highlightColor,
+    this.pressColor,
     this.excludeFromSemantics = false,
     this.focusNode,
     this.canRequestFocus = true,
@@ -181,7 +181,7 @@ class ListTileBackground extends StatelessWidget {
   /// The shape (e.g., circle, rectangle) to use for the highlight drawn around
   /// this part of the material when pressed, hovered over, or focused.
   ///
-  /// The same shape is used for the pressed highlight (see [highlightColor]),
+  /// The same shape is used for the pressed highlight (see [pressColor]),
   /// the focus highlight (see [focusColor]), and the hover highlight (see
   /// [hoverColor]).
   ///
@@ -193,7 +193,7 @@ class ListTileBackground extends StatelessWidget {
   /// See also:
   ///
   ///  * [borderRadius], which controls the corners when the box is a rectangle.
-  ///  * [highlightColor], the color of the highlight.
+  ///  * [pressColor], the color of the highlight.
   ///  * [getRectCallback], which controls the size and position of the box when
   ///    it is a rectangle.
   final BoxShape highlightShape;
@@ -240,14 +240,14 @@ class ListTileBackground extends StatelessWidget {
   ///
   ///  * [highlightShape], the shape of the focus, hover, and pressed
   ///    highlights.
-  ///  * [highlightColor], the color of the pressed highlight.
+  ///  * [pressColor], the color of the pressed highlight.
   ///  * [focusColor], the color of the focus highlight.
   ///  * [splashColor], the color of the splash.
   ///  * [splashFactory], which defines the appearance of the splash.
   final Color hoverColor;
 
   /// The highlight color of the ink response when pressed. If this property is
-  /// null then the highlight color of the theme, [ThemeData.highlightColor],
+  /// null then the highlight color of the theme, [ThemeData.pressColor],
   /// will be used.
   ///
   /// See also:
@@ -258,7 +258,7 @@ class ListTileBackground extends StatelessWidget {
   ///    highlights.
   ///  * [splashColor], the color of the splash.
   ///  * [splashFactory], which defines the appearance of the splash.
-  final Color highlightColor;
+  final Color pressColor;
 
   /// Whether to exclude the gestures introduced by this widget from the
   /// semantics tree.
@@ -315,7 +315,7 @@ class ListTileBackground extends StatelessWidget {
       customBorder: customBorder,
       focusColor: focusColor,
       hoverColor: hoverColor,
-      highlightColor: highlightColor,
+      pressColor: pressColor,
       excludeFromSemantics: excludeFromSemantics,
       focusNode: focusNode,
       canRequestFocus: canRequestFocus,
@@ -357,7 +357,7 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.customBorder,
     this.focusColor,
     this.hoverColor,
-    this.highlightColor,
+    this.pressColor,
     this.excludeFromSemantics = false,
     this.focusNode,
     this.canRequestFocus = true,
@@ -386,7 +386,7 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
   final ShapeBorder customBorder;
   final Color focusColor;
   final Color hoverColor;
-  final Color highlightColor;
+  final Color pressColor;
   final bool excludeFromSemantics;
   final ValueChanged<bool> onFocusChange;
   final bool autofocus;
@@ -466,7 +466,7 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
   Color getHighlightColorForType(_HighlightType type) {
     switch (type) {
       case _HighlightType.pressed:
-        return widget.highlightColor;
+        return widget.pressColor;
       case _HighlightType.focus:
         return widget.focusColor;
       case _HighlightType.hover:
@@ -554,13 +554,21 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
   }
 
   void _handleTapDown(TapDownDetails details) {
+    updateHighlight(_HighlightType.pressed, value: true);
     if (widget.onTapDown != null) {
       widget.onTapDown(details);
     }
   }
 
+  void _handleTapUp(TapUpDetails details) {
+    if (enabled && _hovering) {
+      updateHighlight(_HighlightType.hover, value: enabled);
+    } else {
+      updateHighlight(_HighlightType.pressed, value: false);
+    }
+  }
+
   void _handleTap(BuildContext context) {
-    updateHighlight(_HighlightType.pressed, value: false);
     if (widget.onTap != null) {
       widget.onTap();
     }
@@ -630,6 +638,7 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
           onExit: enabled ? _handleMouseExit : null,
           child: GestureDetector(
             onTapDown: enabled ? _handleTapDown : null,
+            onTapUp: enabled ? _handleTapUp : null,
             onTap: enabled ? () => _handleTap(context) : null,
             onTapCancel: enabled ? _handleTapCancel : null,
             onDoubleTap: widget.onDoubleTap != null ? _handleDoubleTap : null,
