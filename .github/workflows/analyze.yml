@@ -13,6 +13,6 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v2
       - name: Analyze package
-        uses: axel-op/dart-package-analyzer@stable
+        uses: axel-op/dart-package-analyzer/with-full-sdk@v2
         with:
           githubToken: ${{secrets.GITHUB_TOKEN}}
