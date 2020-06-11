@@ -496,6 +496,7 @@ class CupertinoListTile extends StatelessWidget {
     this.onLongPress,
     this.mouseCursor,
     this.selected = false,
+    this.border,
     this.pressColor,
     this.focusColor,
     this.hoverColor,
@@ -599,6 +600,8 @@ class CupertinoListTile extends StatelessWidget {
   /// By default the selected color is the theme's primary color. The selected color
   /// can be overridden with a [ListTileTheme].
   final bool selected;
+
+  final ShapeBorder border;
 
   /// The color for the tile's background when it is pressed.
   final Color pressColor;
@@ -767,11 +770,19 @@ class CupertinoListTile extends StatelessWidget {
       },
     );
 
-    final ShapeBorder border = Border(
-      bottom: BorderSide(
-          color: CupertinoDynamicColor.resolve(
-              CupertinoColors.separator, context)),
-    );
+    Widget separator;
+    if (border == null) {
+      separator = Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: CupertinoDynamicColor.resolve(
+                  CupertinoColors.separator, context),
+            ),
+          ),
+        ),
+      );
+    }
 
     return ListTileBackground(
       onTap: enabled ? onTap : null,
@@ -792,6 +803,7 @@ class CupertinoListTile extends StatelessWidget {
           bottom: false,
           minimum: resolvedContentPadding,
           child: _ListTile(
+            separator: separator,
             leading: leadingIcon,
             title: titleText,
             subtitle: subtitleText,
@@ -803,6 +815,7 @@ class CupertinoListTile extends StatelessWidget {
                 titleStyle.textBaseline ?? TextBaseline.alphabetic,
             subtitleBaselineType:
                 subtitleStyle?.textBaseline ?? TextBaseline.alphabetic,
+            padding: resolvedContentPadding,
           ),
         ),
       ),
@@ -812,6 +825,7 @@ class CupertinoListTile extends StatelessWidget {
 
 // Identifies the children of a _ListTileElement.
 enum _ListTileSlot {
+  separator,
   leading,
   title,
   subtitle,
@@ -821,6 +835,7 @@ enum _ListTileSlot {
 class _ListTile extends RenderObjectWidget {
   const _ListTile({
     Key key,
+    this.separator,
     this.leading,
     this.title,
     this.subtitle,
@@ -830,12 +845,15 @@ class _ListTile extends RenderObjectWidget {
     @required this.textDirection,
     @required this.titleBaselineType,
     this.subtitleBaselineType,
+    this.padding,
   })  : assert(isThreeLine != null),
         assert(isDense != null),
         assert(textDirection != null),
         assert(titleBaselineType != null),
+        assert(padding != null),
         super(key: key);
 
+  final Widget separator;
   final Widget leading;
   final Widget title;
   final Widget subtitle;
@@ -845,6 +863,7 @@ class _ListTile extends RenderObjectWidget {
   final TextDirection textDirection;
   final TextBaseline titleBaselineType;
   final TextBaseline subtitleBaselineType;
+  final EdgeInsets padding;
 
   @override
   _ListTileElement createElement() => _ListTileElement(this);
@@ -852,6 +871,7 @@ class _ListTile extends RenderObjectWidget {
   @override
   _RenderListTile createRenderObject(BuildContext context) {
     return _RenderListTile(
+      padding: padding,
       isThreeLine: isThreeLine,
       isDense: isDense,
       textDirection: textDirection,
@@ -914,6 +934,7 @@ class _ListTileElement extends RenderObjectElement {
   @override
   void mount(Element parent, dynamic newSlot) {
     super.mount(parent, newSlot);
+    _mountChild(widget.separator, _ListTileSlot.separator);
     _mountChild(widget.leading, _ListTileSlot.leading);
     _mountChild(widget.title, _ListTileSlot.title);
     _mountChild(widget.subtitle, _ListTileSlot.subtitle);
@@ -937,6 +958,7 @@ class _ListTileElement extends RenderObjectElement {
   void update(_ListTile newWidget) {
     super.update(newWidget);
     assert(widget == newWidget);
+    _updateChild(widget.separator, _ListTileSlot.separator);
     _updateChild(widget.leading, _ListTileSlot.leading);
     _updateChild(widget.title, _ListTileSlot.title);
     _updateChild(widget.subtitle, _ListTileSlot.subtitle);
@@ -945,6 +967,9 @@ class _ListTileElement extends RenderObjectElement {
 
   void _updateRenderObject(RenderBox child, _ListTileSlot slot) {
     switch (slot) {
+      case _ListTileSlot.separator:
+        renderObject.separator = child;
+        break;
       case _ListTileSlot.leading:
         renderObject.leading = child;
         break;
@@ -987,15 +1012,18 @@ class _ListTileElement extends RenderObjectElement {
 
 class _RenderListTile extends RenderBox {
   _RenderListTile({
+    @required EdgeInsets padding,
     @required bool isDense,
     @required bool isThreeLine,
     @required TextDirection textDirection,
     @required TextBaseline titleBaselineType,
     TextBaseline subtitleBaselineType,
-  })  : assert(isDense != null),
+  })  : assert(padding != null),
+        assert(isDense != null),
         assert(isThreeLine != null),
         assert(textDirection != null),
         assert(titleBaselineType != null),
+        _padding = padding,
         _isDense = isDense,
         _isThreeLine = isThreeLine,
         _textDirection = textDirection,
@@ -1028,6 +1056,12 @@ class _RenderListTile extends RenderBox {
     return newChild;
   }
 
+  RenderBox _separator;
+  RenderBox get separator => _separator;
+  set separator(RenderBox value) {
+    _separator = _updateChild(_separator, value, _ListTileSlot.separator);
+  }
+
   RenderBox _leading;
   RenderBox get leading => _leading;
   set leading(RenderBox value) {
@@ -1054,10 +1088,20 @@ class _RenderListTile extends RenderBox {
 
   // The returned list is ordered for hit testing.
   Iterable<RenderBox> get _children sync* {
+    if (separator != null) yield separator;
     if (leading != null) yield leading;
     if (title != null) yield title;
     if (subtitle != null) yield subtitle;
     if (trailing != null) yield trailing;
+  }
+
+  EdgeInsets get padding => _padding;
+  EdgeInsets _padding;
+  set padding(EdgeInsets value) {
+    assert(value != null);
+    if (_padding == value) return;
+    _padding = value;
+    markNeedsLayout();
   }
 
   bool get isDense => _isDense;
@@ -1133,6 +1177,7 @@ class _RenderListTile extends RenderBox {
       if (child != null) value.add(child.toDiagnosticsNode(name: name));
     }
 
+    add(separator, 'separator');
     add(leading, 'leading');
     add(title, 'title');
     add(subtitle, 'subtitle');
@@ -1224,6 +1269,7 @@ class _RenderListTile extends RenderBox {
   @override
   void performLayout() {
     final BoxConstraints constraints = this.constraints;
+    final bool hasSeparator = separator != null;
     final bool hasLeading = leading != null;
     final bool hasSubtitle = subtitle != null;
     final bool hasTrailing = trailing != null;
@@ -1261,6 +1307,17 @@ class _RenderListTile extends RenderBox {
     );
     final Size titleSize = _layoutBox(title, textConstraints);
     final Size subtitleSize = _layoutBox(subtitle, textConstraints);
+
+    final BoxConstraints separatorConstraints = constraints.enforce(
+      BoxConstraints(
+        minWidth: tileWidth -
+            titleStart +
+            (textDirection == TextDirection.ltr
+                ? _padding.horizontal
+                : _padding.horizontal),
+      ),
+    );
+    final Size separatorSize = _layoutBox(separator, separatorConstraints);
 
     double titleBaseline;
     double subtitleBaseline;
@@ -1334,6 +1391,7 @@ class _RenderListTile extends RenderBox {
     switch (textDirection) {
       case TextDirection.rtl:
         {
+          if (hasSeparator) _positionBox(separator, Offset(0.0, tileHeight));
           if (hasLeading)
             _positionBox(
                 leading, Offset(tileWidth - leadingSize.width, leadingY));
@@ -1345,6 +1403,8 @@ class _RenderListTile extends RenderBox {
         }
       case TextDirection.ltr:
         {
+          if (hasSeparator)
+            _positionBox(separator, Offset(titleStart, tileHeight));
           if (hasLeading) _positionBox(leading, Offset(0.0, leadingY));
           _positionBox(title, Offset(titleStart, titleY));
           if (hasSubtitle)
@@ -1370,6 +1430,7 @@ class _RenderListTile extends RenderBox {
       }
     }
 
+    doPaint(separator);
     doPaint(leading);
     doPaint(title);
     doPaint(subtitle);

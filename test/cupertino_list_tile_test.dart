@@ -1328,6 +1328,7 @@ void main() {
                 autofocus: true,
                 focusNode: focusNode,
                 trailing: SizedBox.shrink(),
+                border: Border.fromBorderSide(BorderSide.none),
               ),
             );
           }),
@@ -1372,6 +1373,7 @@ void main() {
                 key: tileKey,
                 onTap: enabled ? () {} : null,
                 hoverColor: CupertinoColors.systemOrange.color,
+                border: Border.fromBorderSide(BorderSide.none),
                 trailing: SizedBox.shrink(),
                 autofocus: true,
               ),
