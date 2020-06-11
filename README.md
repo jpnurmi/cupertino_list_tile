@@ -1,14 +1,23 @@
-# cupertino_list_tile
+# Cupertino List Tile for Flutter
 
-A new Flutter package project.
+[![pub](https://img.shields.io/pub/v/cupertino_list_tile.svg)](https://pub.dev/packages/cupertino_list_tile)
+[![license: BSD](https://img.shields.io/badge/license-BSD-yellow.svg)](https://opensource.org/licenses/BSD-3-Clause)
+![build](https://github.com/jpnurmi/cupertino_list_tile/workflows/build/badge.svg)
+[![codecov](https://codecov.io/gh/jpnurmi/cupertino_list_tile/branch/master/graph/badge.svg)](https://codecov.io/gh/jpnurmi/cupertino_list_tile)
 
-## Getting Started
+Cupertino version of the stock [Material ListTile](https://api.flutter.dev/flutter/material/ListTile-class.html)
+in [Flutter](https://flutter.dev).
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+## Screenshots
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+### Light
+
+![Light CupertinoListTile](https://raw.githubusercontent.com/jpnurmi/cupertino_list_tile/master/doc/images/light.png "Light CupertinoListTile")
+
+### Dark
+
+![Dark CupertinoListTile](https://raw.githubusercontent.com/jpnurmi/cupertino_list_tile/master/doc/images/dark.png "Dark CupertinoListTile")
+
+## Usage
+
+To use this package, add `cupertino_list_tile` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).

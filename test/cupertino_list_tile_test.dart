@@ -1,3 +1,4 @@
+// Copyright 2020 J-P Nurmi <jpnurmi@gmail.com>
 // Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -237,28 +238,6 @@ void main() {
     }
 
     testHorizontalGeometry();
-  });
-
-  testWidgets('ListTile.divideTiles', (WidgetTester tester) async {
-    final List<String> titles = <String>['first', 'second', 'third'];
-
-    await tester.pumpWidget(CupertinoApp(
-      home: Builder(
-        builder: (BuildContext context) {
-          return ListView(
-            children: CupertinoListTile.divideTiles(
-              context: context,
-              tiles: titles.map<Widget>(
-                  (String title) => CupertinoListTile(title: Text(title))),
-            ).toList(),
-          );
-        },
-      ),
-    ));
-
-    expect(find.text('first'), findsOneWidget);
-    expect(find.text('second'), findsOneWidget);
-    expect(find.text('third'), findsOneWidget);
   });
 
   testWidgets('ListTileTheme', (WidgetTester tester) async {
