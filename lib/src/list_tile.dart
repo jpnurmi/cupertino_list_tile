@@ -41,7 +41,7 @@ class CupertinoListTile extends StatelessWidget {
     this.mouseCursor,
     this.selected = false,
     this.border,
-    this.pressColor,
+    this.pressColor = CupertinoColors.systemFill,
     this.focusColor,
     this.hoverColor,
     this.focusNode,
