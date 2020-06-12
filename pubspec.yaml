@@ -15,4 +15,4 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_test_ui: ^1.0.0
+  meta: ^1.1.8
