@@ -23,7 +23,6 @@ class ListTileBackground extends StatelessWidget {
     this.onLongPress,
     this.onHighlightChanged,
     this.onHover,
-    this.mouseCursor = MouseCursor.defer,
     this.borderRadius,
     this.customBorder,
     this.focusColor,
@@ -34,8 +33,7 @@ class ListTileBackground extends StatelessWidget {
     this.canRequestFocus = true,
     this.onFocusChange,
     this.autofocus = false,
-  })  : assert(mouseCursor != null),
-        assert(excludeFromSemantics != null),
+  })  : assert(excludeFromSemantics != null),
         assert(autofocus != null),
         assert(canRequestFocus != null),
         super(key: key);
@@ -48,7 +46,6 @@ class ListTileBackground extends StatelessWidget {
   final GestureLongPressCallback onLongPress;
   final ValueChanged<bool> onHighlightChanged;
   final ValueChanged<bool> onHover;
-  final MouseCursor mouseCursor;
   final BorderRadius borderRadius;
   final ShapeBorder customBorder;
   final Color focusColor;
@@ -73,7 +70,6 @@ class ListTileBackground extends StatelessWidget {
       onLongPress: onLongPress,
       onHighlightChanged: onHighlightChanged,
       onHover: onHover,
-      mouseCursor: mouseCursor,
       borderRadius: borderRadius,
       customBorder: customBorder,
       focusColor: focusColor,
@@ -106,7 +102,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.onLongPress,
     this.onHighlightChanged,
     this.onHover,
-    this.mouseCursor = MouseCursor.defer,
     this.borderRadius,
     this.customBorder,
     this.focusColor,
@@ -121,8 +116,7 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.debugCheckContext,
   })  : assert(excludeFromSemantics != null),
         assert(autofocus != null),
-        assert(canRequestFocus != null),
-        assert(mouseCursor != null);
+        assert(canRequestFocus != null);
 
   final Widget child;
   final GestureTapCallback onTap;
@@ -132,7 +126,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
   final GestureLongPressCallback onLongPress;
   final ValueChanged<bool> onHighlightChanged;
   final ValueChanged<bool> onHover;
-  final MouseCursor mouseCursor;
   final BorderRadius borderRadius;
   final ShapeBorder customBorder;
   final Color focusColor;
@@ -161,8 +154,6 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     ];
     properties
         .add(IterableProperty<String>('gestures', gestures, ifEmpty: '<none>'));
-    properties.add(DiagnosticsProperty<MouseCursor>('mouseCursor', mouseCursor,
-        defaultValue: MouseCursor.defer));
   }
 }
 
@@ -377,7 +368,6 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
         onFocusChange: _handleFocusUpdate,
         autofocus: widget.autofocus,
         child: MouseRegion(
-          cursor: widget.mouseCursor,
           onEnter: enabled ? _handleMouseEnter : null,
           onExit: enabled ? _handleMouseExit : null,
           child: GestureDetector(
