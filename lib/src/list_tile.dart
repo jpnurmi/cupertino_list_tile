@@ -753,6 +753,7 @@ class _RenderListTile extends RenderBox {
                 : _padding.horizontal),
       ),
     );
+    // ignore: unused_local_variable
     final Size separatorSize = _layoutBox(separator, separatorConstraints);
 
     double titleBaseline;
