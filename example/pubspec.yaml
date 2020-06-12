@@ -6,6 +6,7 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
+  provider: ^4.1.3
   cupertino_list_tile:
     path: ../
   flutter:
