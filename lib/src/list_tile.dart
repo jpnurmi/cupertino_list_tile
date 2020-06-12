@@ -245,9 +245,9 @@ class CupertinoListTile extends StatelessWidget {
       mouseCursor: effectiveMouseCursor,
       canRequestFocus: enabled,
       focusNode: focusNode,
-      pressColor: pressColor,
-      focusColor: focusColor,
-      hoverColor: hoverColor,
+      pressColor: CupertinoDynamicColor.resolve(pressColor, context),
+      focusColor: CupertinoDynamicColor.resolve(focusColor, context),
+      hoverColor: CupertinoDynamicColor.resolve(hoverColor, context),
       autofocus: autofocus,
       customBorder: border,
       child: Semantics(
