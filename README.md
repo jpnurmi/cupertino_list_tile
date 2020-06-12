@@ -8,15 +8,12 @@
 Cupertino version of the stock [Material ListTile](https://api.flutter.dev/flutter/material/ListTile-class.html)
 in [Flutter](https://flutter.dev).
 
-## Screenshots
+| **NOTE:** This is not a pixel perfect interpretation of the iOS Human Interface Guidelines, but a quick and straight-forward adaptation of the Material ListTile to look a bit more appropriate with the Cupertino style, follow the appropriate color theme etc. |
+| --- |
 
-### Light
+## Preview
 
-![Light CupertinoListTile](https://raw.githubusercontent.com/jpnurmi/cupertino_list_tile/master/doc/images/light.png "Light CupertinoListTile")
-
-### Dark
-
-![Dark CupertinoListTile](https://raw.githubusercontent.com/jpnurmi/cupertino_list_tile/master/doc/images/dark.png "Dark CupertinoListTile")
+![CupertinoListTile](https://raw.githubusercontent.com/jpnurmi/cupertino_list_tile/master/doc/images/preview.gif "CupertinoListTile")
 
 ## Usage
 
