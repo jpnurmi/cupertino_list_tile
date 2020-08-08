@@ -261,6 +261,20 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
     });
   }
 
+  bool get _shouldShowFocus {
+    final NavigationMode mode =
+        MediaQuery.of(context, nullOk: true)?.navigationMode ??
+            NavigationMode.traditional;
+    switch (mode) {
+      case NavigationMode.traditional:
+        return enabled && _hasFocus;
+      case NavigationMode.directional:
+        return _hasFocus;
+    }
+    assert(false, 'Navigation mode $mode not handled');
+    return null;
+  }
+
   void _updateFocusHighlights() {
     bool showFocus;
     switch (FocusManager.instance.highlightMode) {
@@ -268,7 +282,7 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
         showFocus = false;
         break;
       case FocusHighlightMode.traditional:
-        showFocus = enabled && _hasFocus;
+        showFocus = _shouldShowFocus;
         break;
     }
     updateHighlight(_HighlightType.focus, value: showFocus);
@@ -338,15 +352,28 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
     }
   }
 
+  bool get _canRequestFocus {
+    final NavigationMode mode =
+        MediaQuery.of(context, nullOk: true)?.navigationMode ??
+            NavigationMode.traditional;
+    switch (mode) {
+      case NavigationMode.traditional:
+        return enabled && widget.canRequestFocus;
+      case NavigationMode.directional:
+        return true;
+    }
+    assert(false, 'NavigationMode $mode not handled.');
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(widget.debugCheckContext(context));
-    final bool canRequestFocus = enabled && widget.canRequestFocus;
     return Actions(
       actions: _actionMap,
       child: Focus(
         focusNode: widget.focusNode,
-        canRequestFocus: canRequestFocus,
+        canRequestFocus: _canRequestFocus,
         onFocusChange: _handleFocusUpdate,
         autofocus: widget.autofocus,
         child: MouseRegion(
