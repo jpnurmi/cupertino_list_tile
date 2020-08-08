@@ -10,7 +10,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:flutter/material.dart' show ListTileTheme;
+import 'package:flutter/material.dart'
+    show
+        ListTileTheme,
+        MaterialState,
+        MaterialStateMouseCursor,
+        MaterialStateProperty;
 export 'package:flutter/material.dart' show ListTileTheme;
 
 import 'list_tile_background.dart';
@@ -33,6 +38,7 @@ class CupertinoListTile extends StatelessWidget {
     this.enabled = true,
     this.onTap,
     this.onLongPress,
+    this.mouseCursor,
     this.selected = false,
     this.border,
     this.pressColor = CupertinoColors.systemFill,
@@ -76,6 +82,9 @@ class CupertinoListTile extends StatelessWidget {
 
   /// See [ListTile.onLongPress].
   final GestureLongPressCallback onLongPress;
+
+  /// See [ListTile.mouseCursor].
+  final MouseCursor mouseCursor;
 
   /// See [ListTile.selected].
   final bool selected;
@@ -207,6 +216,15 @@ class CupertinoListTile extends StatelessWidget {
             tileTheme?.contentPadding?.resolve(textDirection) ??
             _defaultContentPadding;
 
+    final MouseCursor effectiveMouseCursor =
+        MaterialStateProperty.resolveAs<MouseCursor>(
+      mouseCursor ?? MaterialStateMouseCursor.clickable,
+      <MaterialState>{
+        if (!enabled) MaterialState.disabled,
+        if (selected) MaterialState.selected,
+      },
+    );
+
     Widget separator;
     if (border == null) {
       separator = Container(
@@ -224,6 +242,7 @@ class CupertinoListTile extends StatelessWidget {
     return ListTileBackground(
       onTap: enabled ? onTap : null,
       onLongPress: enabled ? onLongPress : null,
+      mouseCursor: effectiveMouseCursor,
       canRequestFocus: enabled,
       focusNode: focusNode,
       pressColor: CupertinoDynamicColor.resolve(pressColor, context),
