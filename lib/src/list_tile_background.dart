@@ -174,25 +174,18 @@ enum _HighlightType {
 
 class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
   bool _hovering = false;
-  Map<LocalKey, ActionFactory> _actionMap;
+  Map<Type, Action<Intent>> _actionMap;
   Color _highlightColor;
 
-  void _handleAction(FocusNode node, Intent intent) {
-    _handleTap(node.context);
-  }
-
-  Action _createAction() {
-    return CallbackAction(
-      ActivateAction.key,
-      onInvoke: _handleAction,
-    );
+  void _handleAction(ActivateIntent intent) {
+    _handleTap(context);
   }
 
   @override
   void initState() {
     super.initState();
-    _actionMap = <LocalKey, ActionFactory>{
-      ActivateAction.key: _createAction,
+    _actionMap = <Type, Action<Intent>>{
+      ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: _handleAction),
     };
     FocusManager.instance
         .addHighlightModeListener(_handleFocusHighlightModeChange);
