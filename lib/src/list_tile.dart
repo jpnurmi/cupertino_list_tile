@@ -771,6 +771,7 @@ class _RenderListTile extends RenderBox {
             (textDirection == TextDirection.ltr
                 ? _padding.horizontal
                 : _padding.horizontal),
+        maxHeight: 1,
       ),
     );
     // ignore: unused_local_variable
