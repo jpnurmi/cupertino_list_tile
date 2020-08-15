@@ -228,6 +228,7 @@ class CupertinoListTile extends StatelessWidget {
     Widget separator;
     if (border == null) {
       separator = Container(
+        height: 1,
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
