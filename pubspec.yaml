@@ -1,7 +1,7 @@
 name: cupertino_list_tile
 description: >-
   This is a Cupertino version of the stock Material ListTile in Flutter.
-version: 0.1.0
+version: 0.1.4
 homepage: https://github.com/jpnurmi/cupertino_list_tile
 repository: https://github.com/jpnurmi/cupertino_list_tile
 issue_tracker: https://github.com/jpnurmi/cupertino_list_tile/issues
@@ -9,7 +9,7 @@ issue_tracker: https://github.com/jpnurmi/cupertino_list_tile/issues
 environment:
   sdk: '>=2.7.0 <3.0.0'
 dependencies:
-  cupertino_icons: ^0.1.3
+  cupertino_icons: ^1.0.0
   flutter:
     sdk: flutter
 dev_dependencies:

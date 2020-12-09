@@ -228,6 +228,7 @@ class CupertinoListTile extends StatelessWidget {
     Widget separator;
     if (border == null) {
       separator = Container(
+        height: 1,
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -770,8 +771,10 @@ class _RenderListTile extends RenderBox {
             (textDirection == TextDirection.ltr
                 ? _padding.horizontal
                 : _padding.horizontal),
+        maxHeight: 1,
       ),
     );
+    // ignore: unused_local_variable
     final Size separatorSize = _layoutBox(separator, separatorConstraints);
 
     double titleBaseline;
@@ -842,11 +845,12 @@ class _RenderListTile extends RenderBox {
       leadingY = math.min((tileHeight - leadingSize.height) / 2.0, 16.0);
       trailingY = (tileHeight - trailingSize.height) / 2.0;
     }
+    final separatorY = tileHeight + _padding.bottom;
 
     switch (textDirection) {
       case TextDirection.rtl:
         {
-          if (hasSeparator) _positionBox(separator, Offset(0.0, tileHeight));
+          if (hasSeparator) _positionBox(separator, Offset(0.0, separatorY));
           if (hasLeading)
             _positionBox(
                 leading, Offset(tileWidth - leadingSize.width, leadingY));
@@ -859,7 +863,7 @@ class _RenderListTile extends RenderBox {
       case TextDirection.ltr:
         {
           if (hasSeparator)
-            _positionBox(separator, Offset(titleStart, tileHeight));
+            _positionBox(separator, Offset(titleStart, separatorY));
           if (hasLeading) _positionBox(leading, Offset(0.0, leadingY));
           _positionBox(title, Offset(titleStart, titleY));
           if (hasSubtitle)
