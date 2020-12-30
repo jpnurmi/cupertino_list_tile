@@ -289,7 +289,7 @@ class _ListTile extends RenderObjectWidget {
     Key? key,
     this.separator,
     this.leading,
-    this.title,
+    required this.title,
     this.subtitle,
     this.subtitleBaselineType,
     this.trailing,
@@ -302,7 +302,7 @@ class _ListTile extends RenderObjectWidget {
 
   final Widget? separator;
   final Widget? leading;
-  final Widget? title;
+  final Widget title;
   final Widget? subtitle;
   final Widget? trailing;
   final bool isThreeLine;
