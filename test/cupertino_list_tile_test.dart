@@ -18,14 +18,14 @@ import 'mock_canvas.dart';
 import 'semantics_tester.dart';
 
 class TestIcon extends StatefulWidget {
-  const TestIcon({Key key}) : super(key: key);
+  const TestIcon({Key? key}) : super(key: key);
 
   @override
   TestIconState createState() => TestIconState();
 }
 
 class TestIconState extends State<TestIcon> {
-  IconThemeData iconTheme;
+  late IconThemeData iconTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class TestIconState extends State<TestIcon> {
 }
 
 class TestText extends StatefulWidget {
-  const TestText(this.text, {Key key}) : super(key: key);
+  const TestText(this.text, {Key? key}) : super(key: key);
 
   final String text;
 
@@ -44,7 +44,7 @@ class TestText extends StatefulWidget {
 }
 
 class TestTextState extends State<TestText> {
-  TextStyle textStyle;
+  late TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ void main() {
 
     final Key leadingKey = GlobalKey();
     final Key trailingKey = GlobalKey();
-    bool hasSubtitle;
+    late bool hasSubtitle;
 
     const double leftPadding = 10.0;
     const double rightPadding = 20.0;
@@ -68,7 +68,7 @@ void main() {
         bool isTwoLine = false,
         bool isThreeLine = false,
         double textScaleFactor = 1.0,
-        double subtitleScaleFactor}) {
+        double? subtitleScaleFactor}) {
       hasSubtitle = isTwoLine || isThreeLine;
       subtitleScaleFactor ??= textScaleFactor;
       return CupertinoApp(
@@ -245,16 +245,16 @@ void main() {
     final Key subtitleKey = UniqueKey();
     final Key leadingKey = UniqueKey();
     final Key trailingKey = UniqueKey();
-    CupertinoThemeData theme;
-    Color disabledColor;
+    late CupertinoThemeData theme;
+    Color? disabledColor;
 
     Widget buildFrame({
       bool enabled = true,
       bool dense = false,
       bool selected = false,
-      Color selectedColor,
-      Color iconColor,
-      Color textColor,
+      Color? selectedColor,
+      Color? iconColor,
+      Color? textColor,
     }) {
       return CupertinoApp(
         home: Center(
@@ -284,9 +284,9 @@ void main() {
     const Color green = Color(0xFF00FF00);
     const Color red = Color(0xFFFF0000);
 
-    Color iconColor(Key key) =>
+    Color? iconColor(Key key) =>
         tester.state<TestIconState>(find.byKey(key)).iconTheme.color;
-    Color textColor(Key key) =>
+    Color? textColor(Key key) =>
         tester.state<TestTextState>(find.byKey(key)).textStyle.color;
 
     // A selected ListTile's leading, trailing, and text get the primary color by default
@@ -1214,10 +1214,10 @@ void main() {
     );
     await tester.pump(); // Let the focus take effect.
 
-    final FocusNode tileNode = Focus.of(childKey.currentContext);
+    final FocusNode tileNode = Focus.of(childKey.currentContext!);
     tileNode.requestFocus();
     await tester.pump(); // Let the focus take effect.
-    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isTrue);
+    expect(Focus.maybeOf(childKey.currentContext!)!.hasPrimaryFocus, isTrue);
 
     expect(tileNode.hasPrimaryFocus, isTrue);
     await tester.pumpWidget(
@@ -1236,7 +1236,7 @@ void main() {
     );
 
     expect(tester.binding.focusManager.primaryFocus, isNot(equals(tileNode)));
-    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isFalse);
+    expect(Focus.maybeOf(childKey.currentContext!)!.hasPrimaryFocus, isFalse);
   });
 
   testWidgets('ListTile can autofocus unless disabled.',
@@ -1260,7 +1260,7 @@ void main() {
     );
 
     await tester.pump();
-    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isTrue);
+    expect(Focus.maybeOf(childKey.currentContext!)!.hasPrimaryFocus, isTrue);
 
     await tester.pumpWidget(
       CupertinoApp(
@@ -1279,7 +1279,7 @@ void main() {
     );
 
     await tester.pump();
-    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isFalse);
+    expect(Focus.maybeOf(childKey.currentContext!)!.hasPrimaryFocus, isFalse);
   });
 
   testWidgets('ListTile is focusable and has correct focus color',
@@ -1454,7 +1454,7 @@ void main() {
 
     await tester.pump();
 
-    expect(RendererBinding.instance.mouseTracker.debugDeviceActiveCursor(1),
+    expect(RendererBinding.instance!.mouseTracker.debugDeviceActiveCursor(1),
         SystemMouseCursors.text);
 
     // Test default cursor
@@ -1471,7 +1471,7 @@ void main() {
       ),
     );
 
-    expect(RendererBinding.instance.mouseTracker.debugDeviceActiveCursor(1),
+    expect(RendererBinding.instance!.mouseTracker.debugDeviceActiveCursor(1),
         SystemMouseCursors.click);
 
     // Test default cursor when disabled
@@ -1488,7 +1488,7 @@ void main() {
       ),
     );
 
-    expect(RendererBinding.instance.mouseTracker.debugDeviceActiveCursor(1),
+    expect(RendererBinding.instance!.mouseTracker.debugDeviceActiveCursor(1),
         SystemMouseCursors.basic);
   });
 }
