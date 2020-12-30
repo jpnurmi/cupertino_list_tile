@@ -1217,8 +1217,7 @@ void main() {
     final FocusNode tileNode = Focus.of(childKey.currentContext);
     tileNode.requestFocus();
     await tester.pump(); // Let the focus take effect.
-    expect(Focus.of(childKey.currentContext, nullOk: true).hasPrimaryFocus,
-        isTrue);
+    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isTrue);
 
     expect(tileNode.hasPrimaryFocus, isTrue);
     await tester.pumpWidget(
@@ -1237,8 +1236,7 @@ void main() {
     );
 
     expect(tester.binding.focusManager.primaryFocus, isNot(equals(tileNode)));
-    expect(Focus.of(childKey.currentContext, nullOk: true).hasPrimaryFocus,
-        isFalse);
+    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isFalse);
   });
 
   testWidgets('ListTile can autofocus unless disabled.',
@@ -1262,8 +1260,7 @@ void main() {
     );
 
     await tester.pump();
-    expect(Focus.of(childKey.currentContext, nullOk: true).hasPrimaryFocus,
-        isTrue);
+    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isTrue);
 
     await tester.pumpWidget(
       CupertinoApp(
@@ -1282,8 +1279,7 @@ void main() {
     );
 
     await tester.pump();
-    expect(Focus.of(childKey.currentContext, nullOk: true).hasPrimaryFocus,
-        isFalse);
+    expect(Focus.maybeOf(childKey.currentContext).hasPrimaryFocus, isFalse);
   });
 
   testWidgets('ListTile is focusable and has correct focus color',
