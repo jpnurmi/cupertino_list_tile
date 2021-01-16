@@ -199,7 +199,7 @@ class CupertinoListTile extends StatelessWidget {
         child: trailing!,
       );
     } else {
-      trailingIcon = Icon(CupertinoIcons.right_chevron,
+      trailingIcon = Icon(CupertinoIcons.chevron_forward,
           color: CupertinoDynamicColor.resolve(
               CupertinoColors.separator, context));
     }
@@ -228,6 +228,7 @@ class CupertinoListTile extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
+              width: 0.5,
               color: CupertinoDynamicColor.resolve(
                   CupertinoColors.separator, context),
             ),
