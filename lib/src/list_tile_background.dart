@@ -9,12 +9,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 typedef RectCallback = Rect Function();
-typedef _GetRectCallback = RectCallback Function(RenderBox referenceBox);
+typedef _GetRectCallback = RectCallback? Function(RenderBox referenceBox);
 typedef _CheckContext = bool Function(BuildContext context);
 
 class ListTileBackground extends StatelessWidget {
   const ListTileBackground({
-    Key key,
+    Key? key,
     this.child,
     this.onTap,
     this.onTapDown,
@@ -34,33 +34,29 @@ class ListTileBackground extends StatelessWidget {
     this.canRequestFocus = true,
     this.onFocusChange,
     this.autofocus = false,
-  })  : assert(mouseCursor != null),
-        assert(excludeFromSemantics != null),
-        assert(autofocus != null),
-        assert(canRequestFocus != null),
-        super(key: key);
+  }) : super(key: key);
 
-  final Widget child;
-  final GestureTapCallback onTap;
-  final GestureTapDownCallback onTapDown;
-  final GestureTapCallback onTapCancel;
-  final GestureTapCallback onDoubleTap;
-  final GestureLongPressCallback onLongPress;
-  final ValueChanged<bool> onHighlightChanged;
-  final ValueChanged<bool> onHover;
+  final Widget? child;
+  final GestureTapCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
+  final GestureTapCallback? onTapCancel;
+  final GestureTapCallback? onDoubleTap;
+  final GestureLongPressCallback? onLongPress;
+  final ValueChanged<bool?>? onHighlightChanged;
+  final ValueChanged<bool?>? onHover;
   final MouseCursor mouseCursor;
-  final BorderRadius borderRadius;
-  final ShapeBorder customBorder;
-  final Color focusColor;
-  final Color hoverColor;
-  final Color pressColor;
+  final BorderRadius? borderRadius;
+  final ShapeBorder? customBorder;
+  final Color? focusColor;
+  final Color? hoverColor;
+  final Color? pressColor;
   final bool excludeFromSemantics;
-  final ValueChanged<bool> onFocusChange;
+  final ValueChanged<bool>? onFocusChange;
   final bool autofocus;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final bool canRequestFocus;
 
-  RectCallback getRectCallback(RenderBox referenceBox) => null;
+  RectCallback? getRectCallback(RenderBox referenceBox) => null;
 
   @override
   Widget build(BuildContext context) {
@@ -119,32 +115,29 @@ class _ListTileBackgroundStateWidget extends StatefulWidget {
     this.autofocus = false,
     this.getRectCallback,
     this.debugCheckContext,
-  })  : assert(excludeFromSemantics != null),
-        assert(autofocus != null),
-        assert(canRequestFocus != null),
-        assert(mouseCursor != null);
+  });
 
-  final Widget child;
-  final GestureTapCallback onTap;
-  final GestureTapDownCallback onTapDown;
-  final GestureTapCallback onTapCancel;
-  final GestureTapCallback onDoubleTap;
-  final GestureLongPressCallback onLongPress;
-  final ValueChanged<bool> onHighlightChanged;
-  final ValueChanged<bool> onHover;
+  final Widget? child;
+  final GestureTapCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
+  final GestureTapCallback? onTapCancel;
+  final GestureTapCallback? onDoubleTap;
+  final GestureLongPressCallback? onLongPress;
+  final ValueChanged<bool?>? onHighlightChanged;
+  final ValueChanged<bool?>? onHover;
   final MouseCursor mouseCursor;
-  final BorderRadius borderRadius;
-  final ShapeBorder customBorder;
-  final Color focusColor;
-  final Color hoverColor;
-  final Color pressColor;
+  final BorderRadius? borderRadius;
+  final ShapeBorder? customBorder;
+  final Color? focusColor;
+  final Color? hoverColor;
+  final Color? pressColor;
   final bool excludeFromSemantics;
-  final ValueChanged<bool> onFocusChange;
+  final ValueChanged<bool>? onFocusChange;
   final bool autofocus;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final bool canRequestFocus;
-  final _GetRectCallback getRectCallback;
-  final _CheckContext debugCheckContext;
+  final _GetRectCallback? getRectCallback;
+  final _CheckContext? debugCheckContext;
 
   @override
   _ListTileBackgroundState createState() => _ListTileBackgroundState();
@@ -174,8 +167,8 @@ enum _HighlightType {
 
 class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
   bool _hovering = false;
-  Map<Type, Action<Intent>> _actionMap;
-  Color _highlightColor;
+  late Map<Type, Action<Intent>> _actionMap;
+  Color? _highlightColor;
 
   void _handleAction(ActivateIntent intent) {
     _handleTap(context);
@@ -207,7 +200,7 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
     super.dispose();
   }
 
-  Color getHighlightColorForType(_HighlightType type) {
+  Color? getHighlightColorForType(_HighlightType type) {
     switch (type) {
       case _HighlightType.pressed:
         return widget.pressColor;
@@ -216,11 +209,9 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
       case _HighlightType.hover:
         return widget.hoverColor;
     }
-    assert(false, 'Unhandled $_HighlightType $type');
-    return null;
   }
 
-  Duration getFadeDurationForType(_HighlightType type) {
+  Duration? getFadeDurationForType(_HighlightType type) {
     switch (type) {
       case _HighlightType.pressed:
         return const Duration(milliseconds: 200);
@@ -228,25 +219,24 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
       case _HighlightType.focus:
         return const Duration(milliseconds: 50);
     }
-    assert(false, 'Unhandled $_HighlightType $type');
-    return null;
   }
 
-  void updateHighlight(_HighlightType type, {@required bool value}) {
+  void updateHighlight(_HighlightType type, {required bool? value}) {
     switch (type) {
       case _HighlightType.pressed:
-        if (widget.onHighlightChanged != null) widget.onHighlightChanged(value);
+        if (widget.onHighlightChanged != null)
+          widget.onHighlightChanged!(value);
         break;
       case _HighlightType.hover:
-        if (widget.onHover != null) widget.onHover(value);
+        if (widget.onHover != null) widget.onHover!(value);
         break;
       case _HighlightType.focus:
         break;
     }
-    _setHighlightColor(value ? getHighlightColorForType(type) : null);
+    _setHighlightColor(value! ? getHighlightColorForType(type) : null);
   }
 
-  void _setHighlightColor(Color color) {
+  void _setHighlightColor(Color? color) {
     setState(() {
       _highlightColor = color;
     });
@@ -261,22 +251,19 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
     });
   }
 
-  bool get _shouldShowFocus {
-    final NavigationMode mode =
-        MediaQuery.of(context, nullOk: true)?.navigationMode ??
-            NavigationMode.traditional;
+  bool? get _shouldShowFocus {
+    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ??
+        NavigationMode.traditional;
     switch (mode) {
       case NavigationMode.traditional:
         return enabled && _hasFocus;
       case NavigationMode.directional:
         return _hasFocus;
     }
-    assert(false, 'Navigation mode $mode not handled');
-    return null;
   }
 
   void _updateFocusHighlights() {
-    bool showFocus;
+    bool? showFocus;
     switch (FocusManager.instance.highlightMode) {
       case FocusHighlightMode.touch:
         showFocus = false;
@@ -293,14 +280,14 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
     _hasFocus = hasFocus;
     _updateFocusHighlights();
     if (widget.onFocusChange != null) {
-      widget.onFocusChange(hasFocus);
+      widget.onFocusChange!(hasFocus);
     }
   }
 
   void _handleTapDown(TapDownDetails details) {
     updateHighlight(_HighlightType.pressed, value: true);
     if (widget.onTapDown != null) {
-      widget.onTapDown(details);
+      widget.onTapDown!(details);
     }
   }
 
@@ -314,24 +301,24 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
 
   void _handleTap(BuildContext context) {
     if (widget.onTap != null) {
-      widget.onTap();
+      widget.onTap!();
     }
   }
 
   void _handleTapCancel() {
     if (widget.onTapCancel != null) {
-      widget.onTapCancel();
+      widget.onTapCancel!();
     }
     updateHighlight(_HighlightType.pressed, value: false);
   }
 
   void _handleDoubleTap() {
-    if (widget.onDoubleTap != null) widget.onDoubleTap();
+    if (widget.onDoubleTap != null) widget.onDoubleTap!();
   }
 
   void _handleLongPress(BuildContext context) {
     if (widget.onLongPress != null) {
-      widget.onLongPress();
+      widget.onLongPress!();
     }
   }
 
@@ -352,23 +339,20 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
     }
   }
 
-  bool get _canRequestFocus {
-    final NavigationMode mode =
-        MediaQuery.of(context, nullOk: true)?.navigationMode ??
-            NavigationMode.traditional;
+  bool? get _canRequestFocus {
+    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ??
+        NavigationMode.traditional;
     switch (mode) {
       case NavigationMode.traditional:
         return enabled && widget.canRequestFocus;
       case NavigationMode.directional:
         return true;
     }
-    assert(false, 'NavigationMode $mode not handled.');
-    return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    assert(widget.debugCheckContext(context));
+    assert(widget.debugCheckContext!(context));
     return Actions(
       actions: _actionMap,
       child: Focus(
@@ -395,7 +379,7 @@ class _ListTileBackgroundState extends State<_ListTileBackgroundStateWidget> {
               child: widget.child,
               decoration: BoxDecoration(
                 color: _highlightColor,
-                border: widget.customBorder,
+                border: widget.customBorder as BoxBorder?,
                 borderRadius: widget.borderRadius,
               ),
             ),

@@ -27,7 +27,7 @@ import 'list_tile_background.dart';
 class CupertinoListTile extends StatelessWidget {
   /// Creates a list tile.
   const CupertinoListTile({
-    Key key,
+    Key? key,
     this.leading,
     this.title,
     this.subtitle,
@@ -46,93 +46,89 @@ class CupertinoListTile extends StatelessWidget {
     this.hoverColor,
     this.focusNode,
     this.autofocus = false,
-  })  : assert(isThreeLine != null),
-        assert(enabled != null),
-        assert(selected != null),
-        assert(autofocus != null),
-        assert(!isThreeLine || subtitle != null),
+  })  : assert(!isThreeLine || subtitle != null),
         super(key: key);
 
   /// See [ListTile.leading].
-  final Widget leading;
+  final Widget? leading;
 
   /// See [ListTile.title].
-  final Widget title;
+  final Widget? title;
 
   /// See [ListTile.subtitle].
-  final Widget subtitle;
+  final Widget? subtitle;
 
   /// See [ListTile.trailing].
-  final Widget trailing;
+  final Widget? trailing;
 
   /// See [ListTile.isThreeLine].
   final bool isThreeLine;
 
   /// See [ListTile.dense].
-  final bool dense;
+  final bool? dense;
 
   /// See [ListTile.contentPadding].
-  final EdgeInsetsGeometry contentPadding;
+  final EdgeInsetsGeometry? contentPadding;
 
   /// See [ListTile.enabled].
   final bool enabled;
 
   /// See [ListTile.onTap].
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   /// See [ListTile.onLongPress].
-  final GestureLongPressCallback onLongPress;
+  final GestureLongPressCallback? onLongPress;
 
   /// See [ListTile.mouseCursor].
-  final MouseCursor mouseCursor;
+  final MouseCursor? mouseCursor;
 
   /// See [ListTile.selected].
   final bool selected;
 
   /// The border of the list tile.
-  final ShapeBorder border;
+  final ShapeBorder? border;
 
   /// The color for the tile's background when it is pressed.
   final Color pressColor;
 
   /// See [ListTile.focusColor].
-  final Color focusColor;
+  final Color? focusColor;
 
   /// See [ListTile.hoverColor].
-  final Color hoverColor;
+  final Color? hoverColor;
 
   /// See [ListTile.focusNode].
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   /// See [ListTile.autofocus].
   final bool autofocus;
 
-  Color _iconColor(
+  Color? _iconColor(
       BuildContext context, CupertinoThemeData theme, ListTileTheme tileTheme) {
     if (!enabled)
       return CupertinoDynamicColor.resolve(
           CupertinoColors.placeholderText, context);
 
-    if (selected && tileTheme?.selectedColor != null)
+    if (selected && tileTheme.selectedColor != null)
       return tileTheme.selectedColor;
 
-    if (!selected && tileTheme?.iconColor != null) return tileTheme.iconColor;
+    if (!selected && tileTheme.iconColor != null) return tileTheme.iconColor;
 
     if (selected) return theme.primaryColor;
 
     return null;
   }
 
-  Color _textColor(BuildContext context, CupertinoThemeData theme,
-      ListTileTheme tileTheme, Color defaultColor) {
+  Color? _textColor(BuildContext context, CupertinoThemeData theme,
+      ListTileTheme tileTheme, Color? defaultColor) {
     if (!enabled)
       return CupertinoDynamicColor.resolve(
           CupertinoColors.placeholderText, context);
 
-    if (selected && tileTheme?.selectedColor != null)
+    if (selected && tileTheme.selectedColor != null)
       return tileTheme.selectedColor;
 
-    if (!selected && tileTheme?.textColor != null) return tileTheme.textColor;
+    if (!selected && tileTheme.textColor != null) return tileTheme.textColor;
 
     if (selected) return theme.primaryColor;
 
@@ -140,13 +136,13 @@ class CupertinoListTile extends StatelessWidget {
   }
 
   bool _isDenseLayout(ListTileTheme tileTheme) {
-    return dense ?? tileTheme?.dense ?? false;
+    return dense ?? tileTheme.dense;
   }
 
   TextStyle _titleTextStyle(
       BuildContext context, CupertinoThemeData theme, ListTileTheme tileTheme) {
     TextStyle style = theme.textTheme.textStyle;
-    final Color color = _textColor(context, theme, tileTheme, style.color);
+    final Color? color = _textColor(context, theme, tileTheme, style.color);
     return _isDenseLayout(tileTheme)
         ? style.copyWith(fontSize: 13.0, color: color)
         : style.copyWith(color: color);
@@ -155,7 +151,7 @@ class CupertinoListTile extends StatelessWidget {
   TextStyle _subtitleTextStyle(
       BuildContext context, CupertinoThemeData theme, ListTileTheme tileTheme) {
     final TextStyle style = theme.textTheme.tabLabelTextStyle;
-    final Color color =
+    final Color? color =
         _textColor(context, theme, tileTheme, theme.textTheme.textStyle.color);
     return _isDenseLayout(tileTheme)
         ? style.copyWith(color: color, fontSize: 12.0)
@@ -167,16 +163,16 @@ class CupertinoListTile extends StatelessWidget {
     final CupertinoThemeData theme = CupertinoTheme.of(context);
     final ListTileTheme tileTheme = ListTileTheme.of(context);
 
-    IconThemeData iconThemeData;
+    late IconThemeData iconThemeData;
     if (leading != null || trailing != null)
       iconThemeData =
           IconThemeData(color: _iconColor(context, theme, tileTheme));
 
-    Widget leadingIcon;
+    Widget? leadingIcon;
     if (leading != null) {
       leadingIcon = IconTheme.merge(
         data: iconThemeData,
-        child: leading,
+        child: leading!,
       );
     }
 
@@ -186,13 +182,13 @@ class CupertinoListTile extends StatelessWidget {
       child: title ?? const SizedBox(),
     );
 
-    Widget subtitleText;
-    TextStyle subtitleStyle;
+    Widget? subtitleText;
+    TextStyle? subtitleStyle;
     if (subtitle != null) {
       subtitleStyle = _subtitleTextStyle(context, theme, tileTheme);
       subtitleText = DefaultTextStyle(
         style: subtitleStyle,
-        child: subtitle,
+        child: subtitle!,
       );
     }
 
@@ -200,7 +196,7 @@ class CupertinoListTile extends StatelessWidget {
     if (trailing != null) {
       trailingIcon = IconTheme.merge(
         data: iconThemeData,
-        child: trailing,
+        child: trailing!,
       );
     } else {
       trailingIcon = Icon(CupertinoIcons.right_chevron,
@@ -213,7 +209,7 @@ class CupertinoListTile extends StatelessWidget {
     final TextDirection textDirection = Directionality.of(context);
     final EdgeInsets resolvedContentPadding =
         contentPadding?.resolve(textDirection) ??
-            tileTheme?.contentPadding?.resolve(textDirection) ??
+            tileTheme.contentPadding?.resolve(textDirection) ??
             _defaultContentPadding;
 
     final MouseCursor effectiveMouseCursor =
@@ -225,7 +221,7 @@ class CupertinoListTile extends StatelessWidget {
       },
     );
 
-    Widget separator;
+    Widget? separator;
     if (border == null) {
       separator = Container(
         height: 1,
@@ -247,8 +243,8 @@ class CupertinoListTile extends StatelessWidget {
       canRequestFocus: enabled,
       focusNode: focusNode,
       pressColor: CupertinoDynamicColor.resolve(pressColor, context),
-      focusColor: CupertinoDynamicColor.resolve(focusColor, context),
-      hoverColor: CupertinoDynamicColor.resolve(hoverColor, context),
+      focusColor: CupertinoDynamicColor.maybeResolve(focusColor, context),
+      hoverColor: CupertinoDynamicColor.maybeResolve(hoverColor, context),
       autofocus: autofocus,
       customBorder: border,
       child: Semantics(
@@ -290,35 +286,30 @@ enum _ListTileSlot {
 
 class _ListTile extends RenderObjectWidget {
   const _ListTile({
-    Key key,
+    Key? key,
     this.separator,
     this.leading,
-    this.title,
+    required this.title,
     this.subtitle,
-    this.trailing,
-    @required this.isThreeLine,
-    @required this.isDense,
-    @required this.textDirection,
-    @required this.titleBaselineType,
     this.subtitleBaselineType,
-    this.padding,
-  })  : assert(isThreeLine != null),
-        assert(isDense != null),
-        assert(textDirection != null),
-        assert(titleBaselineType != null),
-        assert(padding != null),
-        super(key: key);
+    this.trailing,
+    required this.isThreeLine,
+    required this.isDense,
+    required this.textDirection,
+    required this.titleBaselineType,
+    required this.padding,
+  }) : super(key: key);
 
-  final Widget separator;
-  final Widget leading;
+  final Widget? separator;
+  final Widget? leading;
   final Widget title;
-  final Widget subtitle;
-  final Widget trailing;
+  final Widget? subtitle;
+  final Widget? trailing;
   final bool isThreeLine;
   final bool isDense;
   final TextDirection textDirection;
   final TextBaseline titleBaselineType;
-  final TextBaseline subtitleBaselineType;
+  final TextBaseline? subtitleBaselineType;
   final EdgeInsets padding;
 
   @override
@@ -368,15 +359,15 @@ class _ListTileElement extends RenderObjectElement {
   void forgetChild(Element child) {
     assert(slotToChild.values.contains(child));
     assert(childToSlot.keys.contains(child));
-    final _ListTileSlot slot = childToSlot[child];
+    final _ListTileSlot? slot = childToSlot[child];
     childToSlot.remove(child);
     slotToChild.remove(slot);
     super.forgetChild(child);
   }
 
-  void _mountChild(Widget widget, _ListTileSlot slot) {
-    final Element oldChild = slotToChild[slot];
-    final Element newChild = updateChild(oldChild, widget, slot);
+  void _mountChild(Widget? widget, _ListTileSlot slot) {
+    final Element? oldChild = slotToChild[slot];
+    final Element? newChild = updateChild(oldChild, widget, slot);
     if (oldChild != null) {
       slotToChild.remove(slot);
       childToSlot.remove(oldChild);
@@ -388,7 +379,7 @@ class _ListTileElement extends RenderObjectElement {
   }
 
   @override
-  void mount(Element parent, dynamic newSlot) {
+  void mount(Element? parent, dynamic newSlot) {
     super.mount(parent, newSlot);
     _mountChild(widget.separator, _ListTileSlot.separator);
     _mountChild(widget.leading, _ListTileSlot.leading);
@@ -397,9 +388,9 @@ class _ListTileElement extends RenderObjectElement {
     _mountChild(widget.trailing, _ListTileSlot.trailing);
   }
 
-  void _updateChild(Widget widget, _ListTileSlot slot) {
-    final Element oldChild = slotToChild[slot];
-    final Element newChild = updateChild(oldChild, widget, slot);
+  void _updateChild(Widget? widget, _ListTileSlot slot) {
+    final Element? oldChild = slotToChild[slot];
+    final Element? newChild = updateChild(oldChild, widget, slot);
     if (oldChild != null) {
       childToSlot.remove(oldChild);
       slotToChild.remove(slot);
@@ -421,7 +412,7 @@ class _ListTileElement extends RenderObjectElement {
     _updateChild(widget.trailing, _ListTileSlot.trailing);
   }
 
-  void _updateRenderObject(RenderBox child, _ListTileSlot slot) {
+  void _updateRenderObject(RenderBox? child, _ListTileSlot? slot) {
     switch (slot) {
       case _ListTileSlot.separator:
         renderObject.separator = child;
@@ -438,48 +429,40 @@ class _ListTileElement extends RenderObjectElement {
       case _ListTileSlot.trailing:
         renderObject.trailing = child;
         break;
+      case null:
+        break;
     }
   }
 
   @override
-  void insertChildRenderObject(RenderObject child, dynamic slotValue) {
+  void insertRenderObjectChild(RenderObject child, dynamic slotValue) {
     assert(child is RenderBox);
     assert(slotValue is _ListTileSlot);
-    final _ListTileSlot slot = slotValue as _ListTileSlot;
+    final _ListTileSlot? slot = slotValue as _ListTileSlot?;
     _updateRenderObject(child as RenderBox, slot);
     assert(renderObject.childToSlot.keys.contains(child));
     assert(renderObject.slotToChild.keys.contains(slot));
   }
 
   @override
-  void removeChildRenderObject(RenderObject child) {
+  void removeRenderObjectChild(RenderObject child, dynamic slot) {
     assert(child is RenderBox);
     assert(renderObject.childToSlot.keys.contains(child));
-    _updateRenderObject(null, renderObject.childToSlot[child]);
+    _updateRenderObject(null, renderObject.childToSlot[child as RenderBox]);
     assert(!renderObject.childToSlot.keys.contains(child));
     assert(!renderObject.slotToChild.keys.contains(slot));
-  }
-
-  @override
-  void moveChildRenderObject(RenderObject child, dynamic slotValue) {
-    assert(false, 'not reachable');
   }
 }
 
 class _RenderListTile extends RenderBox {
   _RenderListTile({
-    @required EdgeInsets padding,
-    @required bool isDense,
-    @required bool isThreeLine,
-    @required TextDirection textDirection,
-    @required TextBaseline titleBaselineType,
-    TextBaseline subtitleBaselineType,
-  })  : assert(padding != null),
-        assert(isDense != null),
-        assert(isThreeLine != null),
-        assert(textDirection != null),
-        assert(titleBaselineType != null),
-        _padding = padding,
+    required EdgeInsets padding,
+    required bool isDense,
+    required bool isThreeLine,
+    required TextDirection textDirection,
+    required TextBaseline titleBaselineType,
+    TextBaseline? subtitleBaselineType,
+  })  : _padding = padding,
         _isDense = isDense,
         _isThreeLine = isThreeLine,
         _textDirection = textDirection,
@@ -497,8 +480,8 @@ class _RenderListTile extends RenderBox {
   final Map<RenderBox, _ListTileSlot> childToSlot =
       <RenderBox, _ListTileSlot>{};
 
-  RenderBox _updateChild(
-      RenderBox oldChild, RenderBox newChild, _ListTileSlot slot) {
+  RenderBox? _updateChild(
+      RenderBox? oldChild, RenderBox? newChild, _ListTileSlot slot) {
     if (oldChild != null) {
       dropChild(oldChild);
       childToSlot.remove(oldChild);
@@ -512,49 +495,48 @@ class _RenderListTile extends RenderBox {
     return newChild;
   }
 
-  RenderBox _separator;
-  RenderBox get separator => _separator;
-  set separator(RenderBox value) {
+  RenderBox? _separator;
+  RenderBox? get separator => _separator;
+  set separator(RenderBox? value) {
     _separator = _updateChild(_separator, value, _ListTileSlot.separator);
   }
 
-  RenderBox _leading;
-  RenderBox get leading => _leading;
-  set leading(RenderBox value) {
+  RenderBox? _leading;
+  RenderBox? get leading => _leading;
+  set leading(RenderBox? value) {
     _leading = _updateChild(_leading, value, _ListTileSlot.leading);
   }
 
-  RenderBox _title;
-  RenderBox get title => _title;
-  set title(RenderBox value) {
+  RenderBox? _title;
+  RenderBox? get title => _title;
+  set title(RenderBox? value) {
     _title = _updateChild(_title, value, _ListTileSlot.title);
   }
 
-  RenderBox _subtitle;
-  RenderBox get subtitle => _subtitle;
-  set subtitle(RenderBox value) {
+  RenderBox? _subtitle;
+  RenderBox? get subtitle => _subtitle;
+  set subtitle(RenderBox? value) {
     _subtitle = _updateChild(_subtitle, value, _ListTileSlot.subtitle);
   }
 
-  RenderBox _trailing;
-  RenderBox get trailing => _trailing;
-  set trailing(RenderBox value) {
+  RenderBox? _trailing;
+  RenderBox? get trailing => _trailing;
+  set trailing(RenderBox? value) {
     _trailing = _updateChild(_trailing, value, _ListTileSlot.trailing);
   }
 
   // The returned list is ordered for hit testing.
   Iterable<RenderBox> get _children sync* {
-    if (separator != null) yield separator;
-    if (leading != null) yield leading;
-    if (title != null) yield title;
-    if (subtitle != null) yield subtitle;
-    if (trailing != null) yield trailing;
+    if (separator != null) yield separator!;
+    if (leading != null) yield leading!;
+    if (title != null) yield title!;
+    if (subtitle != null) yield subtitle!;
+    if (trailing != null) yield trailing!;
   }
 
   EdgeInsets get padding => _padding;
   EdgeInsets _padding;
   set padding(EdgeInsets value) {
-    assert(value != null);
     if (_padding == value) return;
     _padding = value;
     markNeedsLayout();
@@ -563,7 +545,6 @@ class _RenderListTile extends RenderBox {
   bool get isDense => _isDense;
   bool _isDense;
   set isDense(bool value) {
-    assert(value != null);
     if (_isDense == value) return;
     _isDense = value;
     markNeedsLayout();
@@ -572,7 +553,6 @@ class _RenderListTile extends RenderBox {
   bool get isThreeLine => _isThreeLine;
   bool _isThreeLine;
   set isThreeLine(bool value) {
-    assert(value != null);
     if (_isThreeLine == value) return;
     _isThreeLine = value;
     markNeedsLayout();
@@ -581,7 +561,6 @@ class _RenderListTile extends RenderBox {
   TextDirection get textDirection => _textDirection;
   TextDirection _textDirection;
   set textDirection(TextDirection value) {
-    assert(value != null);
     if (_textDirection == value) return;
     _textDirection = value;
     markNeedsLayout();
@@ -590,15 +569,14 @@ class _RenderListTile extends RenderBox {
   TextBaseline get titleBaselineType => _titleBaselineType;
   TextBaseline _titleBaselineType;
   set titleBaselineType(TextBaseline value) {
-    assert(value != null);
     if (_titleBaselineType == value) return;
     _titleBaselineType = value;
     markNeedsLayout();
   }
 
-  TextBaseline get subtitleBaselineType => _subtitleBaselineType;
-  TextBaseline _subtitleBaselineType;
-  set subtitleBaselineType(TextBaseline value) {
+  TextBaseline? get subtitleBaselineType => _subtitleBaselineType;
+  TextBaseline? _subtitleBaselineType;
+  set subtitleBaselineType(TextBaseline? value) {
     if (_subtitleBaselineType == value) return;
     _subtitleBaselineType = value;
     markNeedsLayout();
@@ -629,7 +607,7 @@ class _RenderListTile extends RenderBox {
   @override
   List<DiagnosticsNode> debugDescribeChildren() {
     final List<DiagnosticsNode> value = <DiagnosticsNode>[];
-    void add(RenderBox child, String name) {
+    void add(RenderBox? child, String name) {
       if (child != null) value.add(child.toDiagnosticsNode(name: name));
     }
 
@@ -644,18 +622,18 @@ class _RenderListTile extends RenderBox {
   @override
   bool get sizedByParent => false;
 
-  static double _minWidth(RenderBox box, double height) {
+  static double _minWidth(RenderBox? box, double height) {
     return box == null ? 0.0 : box.getMinIntrinsicWidth(height);
   }
 
-  static double _maxWidth(RenderBox box, double height) {
+  static double _maxWidth(RenderBox? box, double height) {
     return box == null ? 0.0 : box.getMaxIntrinsicWidth(height);
   }
 
   @override
   double computeMinIntrinsicWidth(double height) {
     final double leadingWidth = leading != null
-        ? math.max(leading.getMinIntrinsicWidth(height), _minLeadingWidth) +
+        ? math.max(leading!.getMinIntrinsicWidth(height), _minLeadingWidth) +
             _horizontalTitleGap
         : 0.0;
     return leadingWidth +
@@ -666,7 +644,7 @@ class _RenderListTile extends RenderBox {
   @override
   double computeMaxIntrinsicWidth(double height) {
     final double leadingWidth = leading != null
-        ? math.max(leading.getMaxIntrinsicWidth(height), _minLeadingWidth) +
+        ? math.max(leading!.getMaxIntrinsicWidth(height), _minLeadingWidth) +
             _horizontalTitleGap
         : 0.0;
     return leadingWidth +
@@ -688,7 +666,7 @@ class _RenderListTile extends RenderBox {
   double computeMinIntrinsicHeight(double width) {
     return math.max(
       _defaultTileHeight,
-      title.getMinIntrinsicHeight(width) +
+      title!.getMinIntrinsicHeight(width) +
           (subtitle?.getMinIntrinsicHeight(width) ?? 0.0),
     );
   }
@@ -701,15 +679,15 @@ class _RenderListTile extends RenderBox {
   @override
   double computeDistanceToActualBaseline(TextBaseline baseline) {
     assert(title != null);
-    final BoxParentData parentData = title.parentData as BoxParentData;
-    return parentData.offset.dy + title.getDistanceToActualBaseline(baseline);
+    final BoxParentData parentData = title!.parentData as BoxParentData;
+    return parentData.offset.dy + title!.getDistanceToActualBaseline(baseline)!;
   }
 
-  static double _boxBaseline(RenderBox box, TextBaseline baseline) {
+  static double? _boxBaseline(RenderBox box, TextBaseline baseline) {
     return box.getDistanceToBaseline(baseline);
   }
 
-  static Size _layoutBox(RenderBox box, BoxConstraints constraints) {
+  static Size _layoutBox(RenderBox? box, BoxConstraints constraints) {
     if (box == null) return Size.zero;
     box.layout(constraints, parentUsesSize: true);
     return box.size;
@@ -777,8 +755,8 @@ class _RenderListTile extends RenderBox {
     // ignore: unused_local_variable
     final Size separatorSize = _layoutBox(separator, separatorConstraints);
 
-    double titleBaseline;
-    double subtitleBaseline;
+    late double titleBaseline;
+    late double subtitleBaseline;
     if (isTwoLine) {
       titleBaseline = isDense ? 28.0 : 32.0;
       subtitleBaseline = isDense ? 48.0 : 52.0;
@@ -793,16 +771,16 @@ class _RenderListTile extends RenderBox {
 
     double tileHeight;
     double titleY;
-    double subtitleY;
+    late double subtitleY;
     if (!hasSubtitle) {
       tileHeight = math.max(
           defaultTileHeight, titleSize.height + 2.0 * _minVerticalPadding);
       titleY = (tileHeight - titleSize.height) / 2.0;
     } else {
       assert(subtitleBaselineType != null);
-      titleY = titleBaseline - _boxBaseline(title, titleBaselineType);
+      titleY = titleBaseline - _boxBaseline(title!, titleBaselineType)!;
       subtitleY =
-          subtitleBaseline - _boxBaseline(subtitle, subtitleBaselineType);
+          subtitleBaseline - _boxBaseline(subtitle!, subtitleBaselineType!)!;
       tileHeight = defaultTileHeight;
 
       // If the title and subtitle overlap, move the title upwards by half
@@ -850,27 +828,27 @@ class _RenderListTile extends RenderBox {
     switch (textDirection) {
       case TextDirection.rtl:
         {
-          if (hasSeparator) _positionBox(separator, Offset(0.0, separatorY));
+          if (hasSeparator) _positionBox(separator!, Offset(0.0, separatorY));
           if (hasLeading)
             _positionBox(
-                leading, Offset(tileWidth - leadingSize.width, leadingY));
-          _positionBox(title, Offset(adjustedTrailingWidth, titleY));
+                leading!, Offset(tileWidth - leadingSize.width, leadingY));
+          _positionBox(title!, Offset(adjustedTrailingWidth, titleY));
           if (hasSubtitle)
-            _positionBox(subtitle, Offset(adjustedTrailingWidth, subtitleY));
-          if (hasTrailing) _positionBox(trailing, Offset(0.0, trailingY));
+            _positionBox(subtitle!, Offset(adjustedTrailingWidth, subtitleY));
+          if (hasTrailing) _positionBox(trailing!, Offset(0.0, trailingY));
           break;
         }
       case TextDirection.ltr:
         {
           if (hasSeparator)
-            _positionBox(separator, Offset(titleStart, separatorY));
-          if (hasLeading) _positionBox(leading, Offset(0.0, leadingY));
-          _positionBox(title, Offset(titleStart, titleY));
+            _positionBox(separator!, Offset(titleStart, separatorY));
+          if (hasLeading) _positionBox(leading!, Offset(0.0, leadingY));
+          _positionBox(title!, Offset(titleStart, titleY));
           if (hasSubtitle)
-            _positionBox(subtitle, Offset(titleStart, subtitleY));
+            _positionBox(subtitle!, Offset(titleStart, subtitleY));
           if (hasTrailing)
             _positionBox(
-                trailing, Offset(tileWidth - trailingSize.width, trailingY));
+                trailing!, Offset(tileWidth - trailingSize.width, trailingY));
           break;
         }
     }
@@ -882,7 +860,7 @@ class _RenderListTile extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    void doPaint(RenderBox child) {
+    void doPaint(RenderBox? child) {
       if (child != null) {
         final BoxParentData parentData = child.parentData as BoxParentData;
         context.paintChild(child, parentData.offset + offset);
@@ -900,8 +878,7 @@ class _RenderListTile extends RenderBox {
   bool hitTestSelf(Offset position) => true;
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {@required Offset position}) {
-    assert(position != null);
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     for (final RenderBox child in _children) {
       final BoxParentData parentData = child.parentData as BoxParentData;
       final bool isHit = result.addWithPaintOffset(
