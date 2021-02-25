@@ -32,9 +32,7 @@
 /build/
 /coverage/
 pubspec.lock
-
-# Web related
-lib/generated_plugin_registrant.dart
+generated_plugin_registrant.*
 
 # Symbolication related
 app.*.symbols
