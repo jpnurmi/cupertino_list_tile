@@ -1,3 +1,7 @@
+## [0.2.0] - 2020-03-14
+
+* Stable null-safe release with stable SDK constraints
+
 ## [0.2.0-nullsafety.0] - 2020-02-25
 
 * Migrated to nullsafety
